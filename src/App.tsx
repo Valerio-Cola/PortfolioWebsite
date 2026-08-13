@@ -226,7 +226,7 @@ export default function App() {
                 <Github className="w-4 h-4" aria-hidden="true" />
                 GitHub
               </a>
-              <a href="https://salarytracker.companyclstudio.workers.dev/" aria-label="Visita il sito web di SalaryTracker" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white shadow-md hover:shadow-lg font-medium rounded-full transition-all">
+              <a href="https://salarytracker.valeriocola.it/" aria-label="Visita il sito web di SalaryTracker" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white shadow-md hover:shadow-lg font-medium rounded-full transition-all">
                 <LineChart className="w-4 h-4" aria-hidden="true" />
                 SalaryTracker
               </a>
