@@ -80,23 +80,29 @@ export default function App() {
   }, [isDarkMode]);
 
   useEffect(() => {
-    // Fetch GitHub Profile and Repos
+    // Fetch GitHub Profile and Repos concurrently (non-blocking)
     const fetchGithubData = async () => {
-      try {
-        const username = personalInfo.github.split('/').pop();
-        if (!username) return;
+      const username = personalInfo.github.split('/').pop();
+      if (!username) {
+        setIsLoadingGithub(false);
+        return;
+      }
 
-        const profileRes = await fetch(`https://api.github.com/users/${username}`);
-        if (profileRes.ok) {
-          const profileData = await profileRes.json();
+      try {
+        const [profileRes, reposRes] = await Promise.allSettled([
+          fetch(`https://api.github.com/users/${username}`),
+          fetch(`https://api.github.com/users/${username}/repos?per_page=100`)
+        ]);
+
+        if (profileRes.status === 'fulfilled' && profileRes.value.ok) {
+          const profileData = await profileRes.value.json();
           setGithubProfile(profileData);
         }
 
-        const reposRes = await fetch(`https://api.github.com/users/${username}/repos?per_page=100`);
-        if (reposRes.ok) {
-          const reposData = await reposRes.json();
+        if (reposRes.status === 'fulfilled' && reposRes.value.ok) {
+          const reposData = await reposRes.value.json();
           
-          // The specific repositories the user wants to highlight
+          // Target repos to highlight
           const targetRepos = [
             'SalaryTracker',
             'RACER',
@@ -105,7 +111,6 @@ export default function App() {
             'Progetto-Sicurezza'
           ];
           
-          // Filter out only the requested repos and order them as specified
           const filteredRepos = reposData
             .filter((r: GithubRepo) => targetRepos.includes(r.name))
             .sort((a: GithubRepo, b: GithubRepo) => targetRepos.indexOf(a.name) - targetRepos.indexOf(b.name));
@@ -129,30 +134,34 @@ export default function App() {
       <header className="fixed top-0 w-full z-50 bg-white/80 dark:bg-slate-950/80 backdrop-blur-md border-b border-stone-200 dark:border-slate-800/60 shadow-sm">
         <div className="max-w-5xl mx-auto px-6 py-4 flex justify-between items-center">
           <div className="flex items-center gap-3">
-            {githubProfile && (
+            <picture className="w-8 h-8 rounded-full overflow-hidden shrink-0 border border-stone-200 dark:border-slate-800/60 shadow-sm flex items-center justify-center">
+              <source srcSet="/profile.webp" type="image/webp" />
               <img 
                 src="/profile.jpg" 
-                onError={(e) => { e.currentTarget.src = githubProfile.avatar_url; }}
                 alt={`Foto profilo di ${personalInfo.name}`} 
-                className="w-8 h-8 rounded-full border border-stone-200 dark:border-slate-800/60 object-cover shadow-sm" 
+                width={32}
+                height={32}
+                loading="lazy"
+                decoding="async"
+                className="w-full h-full object-cover" 
               />
-            )}
+            </picture>
             <span className="font-bold text-xl tracking-tight text-stone-900 dark:text-white">{personalInfo.name}</span>
           </div>
-          <nav className="hidden md:flex items-center gap-6 text-sm font-medium text-stone-500 dark:text-slate-400">
-            <a href="#about" className="hover:text-blue-600 dark:hover:text-sky-400 transition-colors py-1">Profilo</a>
-            <a href="#education" className="hover:text-blue-600 dark:hover:text-sky-400 transition-colors py-1">Formazione</a>
-            <a href="#skills" className="hover:text-blue-600 dark:hover:text-sky-400 transition-colors py-1">Competenze</a>
-            <a href="#experience" className="hover:text-blue-600 dark:hover:text-sky-400 transition-colors py-1">Esperienza</a>
-            <a href="#projects" className="hover:text-blue-600 dark:hover:text-sky-400 transition-colors py-1">Progetti</a>
-            <a href="#github" className="hover:text-blue-600 dark:hover:text-sky-400 transition-colors py-1">GitHub</a>
+          <nav className="hidden md:flex items-center gap-6 text-sm font-medium text-stone-700 dark:text-slate-300">
+            <a href="#about" className="hover:text-blue-700 dark:hover:text-sky-300 transition-colors py-1">Profilo</a>
+            <a href="#education" className="hover:text-blue-700 dark:hover:text-sky-300 transition-colors py-1">Formazione</a>
+            <a href="#skills" className="hover:text-blue-700 dark:hover:text-sky-300 transition-colors py-1">Competenze</a>
+            <a href="#experience" className="hover:text-blue-700 dark:hover:text-sky-300 transition-colors py-1">Esperienza</a>
+            <a href="#projects" className="hover:text-blue-700 dark:hover:text-sky-300 transition-colors py-1">Progetti</a>
+            <a href="#github" className="hover:text-blue-700 dark:hover:text-sky-300 transition-colors py-1">GitHub</a>
             <button onClick={() => setIsDarkMode(!isDarkMode)} aria-label="Cambia tema scuro/chiaro" className="p-2 rounded-full hover:bg-stone-200 dark:hover:bg-slate-800 transition-colors ml-2 flex items-center justify-center">
-              {isDarkMode ? <Sun className="w-5 h-5 text-yellow-400" /> : <Moon className="w-5 h-5 text-stone-600 dark:text-slate-400" />}
+              {isDarkMode ? <Sun className="w-5 h-5 text-yellow-400" /> : <Moon className="w-5 h-5 text-stone-700 dark:text-slate-300" />}
             </button>
           </nav>
           <div className="md:hidden flex items-center">
              <button onClick={() => setIsDarkMode(!isDarkMode)} aria-label="Cambia tema scuro/chiaro" className="p-2 rounded-full hover:bg-stone-200 dark:hover:bg-slate-800 transition-colors">
-              {isDarkMode ? <Sun className="w-5 h-5 text-yellow-400" /> : <Moon className="w-5 h-5 text-stone-600 dark:text-slate-400" />}
+              {isDarkMode ? <Sun className="w-5 h-5 text-yellow-400" /> : <Moon className="w-5 h-5 text-stone-700 dark:text-slate-300" />}
             </button>
           </div>
         </div>
@@ -169,14 +178,18 @@ export default function App() {
               transition={{ duration: 0.7, ease: "easeOut" }}
               className="flex items-center gap-6 mb-4"
             >
-              {githubProfile && (
+              <picture className="w-32 h-32 md:w-48 md:h-48 rounded-full overflow-hidden shrink-0 border-4 border-white dark:border-slate-800 shadow-xl ring-1 ring-stone-200 dark:ring-slate-800 flex items-center justify-center">
+                <source srcSet="/profile.webp" type="image/webp" />
                 <img 
                   src="/profile.jpg" 
-                  onError={(e) => { e.currentTarget.src = githubProfile.avatar_url; }}
                   alt={`Foto profilo di ${personalInfo.name}`} 
-                  className="w-32 h-32 md:w-48 md:h-48 rounded-full border-4 border-white dark:border-slate-800 shadow-xl object-cover ring-1 ring-stone-200 dark:ring-slate-800"
+                  width={400}
+                  height={400}
+                  fetchPriority="high"
+                  decoding="async"
+                  className="w-full h-full object-cover" 
                 />
-              )}
+              </picture>
               <div>
                 <h2 className="text-blue-600 dark:text-sky-400 font-bold tracking-wide uppercase text-sm mb-2">{personalInfo.role}</h2>
                 <h1 className="text-4xl md:text-6xl font-bold text-stone-900 dark:text-white tracking-tight">
@@ -190,7 +203,7 @@ export default function App() {
               animate={{ opacity: 1 }}
               transition={{ duration: 0.5, delay: 0.3 }}
             >
-              <p className="text-lg text-stone-600 dark:text-slate-400 max-w-xl leading-relaxed">
+              <p className="text-lg text-stone-700 dark:text-slate-300 max-w-xl leading-relaxed">
                 Appassionato di programmazione di sistema, algoritmi e High Performance Computing, con una solida base accademica e un forte approccio analitico.
               </p>
             </motion.div>
@@ -238,12 +251,17 @@ export default function App() {
                   <Mail className="w-5 h-5 text-blue-500 dark:text-sky-400 group-hover:scale-110 transition-transform" />
                   <span className="font-medium truncate">{personalInfo.email}</span>
                 </button>
-                {githubProfile && (
-                  <div className="flex items-center gap-3 text-stone-600 dark:text-slate-400 pt-4 border-t border-stone-100 dark:border-slate-800/60">
-                    <Users className="w-5 h-5 text-blue-500 dark:text-sky-400" />
+                {isLoadingGithub ? (
+                  <div className="flex items-center gap-3 text-stone-500 dark:text-slate-400 pt-4 border-t border-stone-100 dark:border-slate-800/60 animate-pulse">
+                    <Users className="w-5 h-5 text-stone-400 dark:text-slate-600" />
+                    <div className="h-4 w-36 bg-stone-200 dark:bg-slate-800 rounded"></div>
+                  </div>
+                ) : githubProfile ? (
+                  <div className="flex items-center gap-3 text-stone-700 dark:text-slate-300 pt-4 border-t border-stone-100 dark:border-slate-800/60">
+                    <Users className="w-5 h-5 text-blue-600 dark:text-sky-400" />
                     <span className="text-sm font-medium">{githubProfile.followers} Follower &middot; {githubProfile.public_repos} Repos</span>
                   </div>
-                )}
+                ) : null}
                 {personalInfo.socials && personalInfo.socials.length > 0 && (
                   <div className="pt-4 border-t border-stone-100 dark:border-slate-800/60">
                     <div className="flex flex-wrap gap-2">
@@ -291,12 +309,12 @@ export default function App() {
                   Laureato in <span className="text-blue-600 dark:text-sky-400 font-bold">Informatica</span> presso Sapienza Università di Roma con una solida preparazione in <span className="text-stone-900 dark:text-white font-bold">algoritmi, strutture dati e programmazione parallela</span>.
                 </p>
                 
-                <p className="text-stone-600 dark:text-slate-400 text-lg leading-relaxed max-w-4xl">
-                  Ho maturato esperienza pratica nello sviluppo di progetti accademici utilizzando <span className="font-medium text-stone-800 dark:text-slate-200">Java, C/C++ e Python</span>, dimostrando una forte attitudine al problem solving, alla programmazione ad oggetti (OOP) e alla progettazione software.
+                <p className="text-stone-700 dark:text-slate-300 text-lg leading-relaxed max-w-4xl">
+                  Ho maturato esperienza pratica nello sviluppo di progetti accademici utilizzando <span className="font-medium text-stone-900 dark:text-white">Java, C/C++ e Python</span>, dimostrando una forte attitudine al problem solving, alla programmazione ad oggetti (OOP) e alla progettazione software.
                 </p>
 
-                <p className="text-stone-600 dark:text-slate-400 text-lg leading-relaxed max-w-4xl">
-                  Particolarmente orientato alla programmazione di sistema e all'High Performance Computing con <span className="font-medium text-stone-800 dark:text-slate-200">OpenMP, MPI, CUDA e HIP</span>, con attenzione all'ottimizzazione delle prestazioni, gestione della memoria, database relazionali e utilizzo dei tool di profiling e debugging in ambiente <span className="font-medium text-stone-800 dark:text-slate-200">Linux</span>.
+                <p className="text-stone-700 dark:text-slate-300 text-lg leading-relaxed max-w-4xl">
+                  Particolarmente orientato alla programmazione di sistema e all'High Performance Computing con <span className="font-medium text-stone-900 dark:text-white">OpenMP, MPI, CUDA e HIP</span>, con attenzione all'ottimizzazione delle prestazioni, gestione della memoria, database relazionali e utilizzo dei tool di profiling e debugging in ambiente <span className="font-medium text-stone-900 dark:text-white">Linux</span>.
                 </p>
               </div>
             </div>
@@ -316,9 +334,9 @@ export default function App() {
                   <div key={idx} className="bg-white dark:bg-slate-900/40 p-6 rounded-2xl border border-stone-200 dark:border-slate-800/60 shadow-sm hover:shadow-md transition-shadow">
                     <h3 className="text-lg font-bold text-stone-900 dark:text-white mb-1">{edu.degree}</h3>
                     <div className="text-blue-600 dark:text-sky-400 font-medium text-sm mb-3">{edu.institution}</div>
-                    <div className="flex justify-between items-center text-sm text-stone-500 dark:text-slate-400">
+                    <div className="flex justify-between items-center text-sm text-stone-600 dark:text-slate-300">
                       <span>{edu.period} • {edu.location}</span>
-                      <span className="font-semibold text-stone-700 dark:text-slate-300">{edu.grade}</span>
+                      <span className="font-semibold text-stone-800 dark:text-slate-200">{edu.grade}</span>
                     </div>
                   </div>
                 ))}
@@ -377,21 +395,21 @@ export default function App() {
               {experience.map((exp, idx) => (
                 <div key={idx} className="relative pl-8 md:pl-0">
                    <div className="md:grid md:grid-cols-4 gap-6 items-start">
-                      <div className="hidden md:block text-stone-500 dark:text-slate-400 font-medium text-sm pt-1">
+                      <div className="hidden md:block text-stone-600 dark:text-slate-300 font-medium text-sm pt-1">
                          {exp.period}
                       </div>
                       <div className="md:col-span-3 relative pb-8 md:pb-0">
                          {/* Timeline line */}
-                         <div className="absolute left-[-33px] md:left-[-25px] top-2 w-px h-full bg-stone-200"></div>
+                         <div className="absolute left-[-33px] md:left-[-25px] top-2 w-px h-full bg-stone-300 dark:bg-slate-700"></div>
                          {/* Timeline dot */}
-                         <div className="absolute left-[-37px] md:left-[-29px] top-1.5 w-2.5 h-2.5 rounded-full bg-blue-600 ring-4 ring-blue-100"></div>
+                         <div className="absolute left-[-37px] md:left-[-29px] top-1.5 w-2.5 h-2.5 rounded-full bg-blue-600 ring-4 ring-blue-100 dark:ring-blue-900/40"></div>
                          
                          <h3 className="text-xl font-bold text-stone-900 dark:text-white">{exp.title}</h3>
-                         <div className="text-blue-600 dark:text-sky-400 font-semibold mb-1">{exp.company} <span className="text-stone-500 dark:text-slate-400 font-normal"> • {exp.location}</span></div>
-                         <div className="md:hidden text-stone-500 dark:text-slate-400 font-medium text-sm mb-4">
+                         <div className="text-blue-700 dark:text-sky-400 font-semibold mb-1">{exp.company} <span className="text-stone-600 dark:text-slate-300 font-normal"> • {exp.location}</span></div>
+                         <div className="md:hidden text-stone-600 dark:text-slate-300 font-medium text-sm mb-4">
                            {exp.period}
                          </div>
-                         <p className="text-stone-600 dark:text-slate-400 mt-3 leading-relaxed">
+                         <p className="text-stone-700 dark:text-slate-300 mt-3 leading-relaxed">
                            {exp.description}
                          </p>
                       </div>
@@ -419,24 +437,24 @@ export default function App() {
                         <h3 className="text-2xl font-bold text-stone-900 dark:text-white flex items-center gap-3">
                           {project.title}
                           <div className="flex items-center gap-2">
-                            <a href={project.githubUrl || personalInfo.github} target="_blank" rel="noopener noreferrer" className="text-stone-400 dark:text-slate-500 hover:text-blue-600 dark:hover:text-sky-400 transition-colors" aria-label={`Codice sorgente di ${project.title}`}>
+                            <a href={project.githubUrl || personalInfo.github} target="_blank" rel="noopener noreferrer" className="text-stone-500 dark:text-slate-400 hover:text-blue-700 dark:hover:text-sky-300 transition-colors" aria-label={`Codice sorgente di ${project.title}`}>
                                <Github className="w-5 h-5" />
                             </a>
                             {project.demoUrl && (
-                              <a href={project.demoUrl} target="_blank" rel="noopener noreferrer" className="text-stone-400 dark:text-slate-500 hover:text-blue-600 dark:hover:text-sky-400 transition-colors" aria-label={`Sito live di ${project.title}`}>
+                              <a href={project.demoUrl} target="_blank" rel="noopener noreferrer" className="text-stone-500 dark:text-slate-400 hover:text-blue-700 dark:hover:text-sky-300 transition-colors" aria-label={`Sito live di ${project.title}`}>
                                  <ExternalLink className="w-5 h-5" />
                               </a>
                             )}
                           </div>
                         </h3>
-                        <p className="text-blue-600 dark:text-sky-400 font-semibold">{project.subtitle}</p>
+                        <p className="text-blue-700 dark:text-sky-400 font-semibold">{project.subtitle}</p>
                       </div>
-                      <span className="inline-flex items-center px-3 py-1 bg-stone-100 dark:bg-slate-900/40 text-stone-600 dark:text-slate-400 font-medium text-sm rounded-full whitespace-nowrap">
+                      <span className="inline-flex items-center px-3 py-1 bg-stone-200/80 dark:bg-slate-800 text-stone-700 dark:text-slate-300 font-medium text-sm rounded-full whitespace-nowrap">
                         {project.period}
                       </span>
                     </div>
                     
-                    <p className="text-stone-600 dark:text-slate-400 leading-relaxed mb-6">
+                    <p className="text-stone-700 dark:text-slate-300 leading-relaxed mb-6">
                       {project.description}
                     </p>
                     
@@ -463,8 +481,27 @@ export default function App() {
             </div>
 
             {isLoadingGithub ? (
-              <div className="flex justify-center items-center py-12">
-                <div className="w-8 h-8 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin"></div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6" aria-busy="true" aria-label="Caricamento repository in corso...">
+                {[1, 2, 3, 4, 5].map((i) => (
+                  <div 
+                    key={i} 
+                    className="bg-white dark:bg-slate-900/40 p-6 rounded-2xl border border-stone-200 dark:border-slate-800/60 shadow-sm animate-pulse space-y-4"
+                  >
+                    <div className="flex items-center gap-2">
+                      <div className="w-4 h-4 bg-stone-200 dark:bg-slate-800 rounded"></div>
+                      <div className="h-5 w-36 bg-stone-200 dark:bg-slate-800 rounded-md"></div>
+                    </div>
+                    <div className="space-y-2">
+                      <div className="h-4 w-full bg-stone-200 dark:bg-slate-800 rounded"></div>
+                      <div className="h-4 w-3/4 bg-stone-200 dark:bg-slate-800 rounded"></div>
+                    </div>
+                    <div className="flex items-center gap-4 pt-2">
+                      <div className="h-3.5 w-16 bg-stone-200 dark:bg-slate-800 rounded"></div>
+                      <div className="h-3.5 w-10 bg-stone-200 dark:bg-slate-800 rounded"></div>
+                      <div className="h-3.5 w-10 bg-stone-200 dark:bg-slate-800 rounded"></div>
+                    </div>
+                  </div>
+                ))}
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -477,20 +514,20 @@ export default function App() {
                     className="block bg-white dark:bg-slate-900/40 p-6 rounded-2xl border border-stone-200 dark:border-slate-800/60 shadow-sm hover:shadow-md hover:border-blue-300 dark:hover:border-sky-500/50 transition-all group"
                   >
                     <div className="flex items-start justify-between gap-4 mb-3">
-                      <h3 className="text-lg font-bold text-stone-900 dark:text-white group-hover:text-blue-600 dark:hover:text-sky-400 transition-colors flex items-center gap-2">
-                        <BookOpen className="w-4 h-4 text-stone-400 dark:text-slate-500 group-hover:text-blue-500 dark:text-sky-400" />
+                      <h3 className="text-lg font-bold text-stone-900 dark:text-white group-hover:text-blue-700 dark:hover:text-sky-400 transition-colors flex items-center gap-2">
+                        <BookOpen className="w-4 h-4 text-stone-500 dark:text-slate-400 group-hover:text-blue-600 dark:text-sky-400" />
                         {repo.name}
                       </h3>
                     </div>
                     
-                    <p className="text-stone-600 dark:text-slate-400 text-sm mb-6 line-clamp-2 min-h-[2.5rem]">
+                    <p className="text-stone-700 dark:text-slate-300 text-sm mb-6 line-clamp-2 min-h-[2.5rem]">
                       {repo.description || "Nessuna descrizione disponibile per questo repository."}
                     </p>
                     
-                    <div className="flex items-center gap-4 text-xs font-semibold text-stone-500 dark:text-slate-400 mt-auto">
+                    <div className="flex items-center gap-4 text-xs font-semibold text-stone-700 dark:text-slate-300 mt-auto">
                       {repo.language && (
                         <div className="flex items-center gap-1.5">
-                          <span className="w-2.5 h-2.5 rounded-full bg-blue-50 dark:bg-sky-500/100"></span>
+                          <span className="w-2.5 h-2.5 rounded-full bg-blue-600 dark:bg-sky-400"></span>
                           {repo.language}
                         </div>
                       )}
@@ -526,19 +563,19 @@ export default function App() {
 
       </main>
 
-      <footer className="border-t border-stone-200 dark:border-slate-800/60 bg-stone-100 dark:bg-slate-900/40 mt-12 py-8">
-        <div className="max-w-5xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-4 text-sm font-medium text-stone-500 dark:text-slate-400">
+      <footer className="border-t border-stone-200 dark:border-slate-800/60 bg-stone-100 dark:bg-slate-900/60 mt-12 py-8">
+        <div className="max-w-5xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-4 text-sm font-medium text-stone-700 dark:text-slate-300">
           <p>© {new Date().getFullYear()} Valerio Cola. Tutti i diritti riservati.</p>
           <div className="flex gap-6 items-center">
             <button 
               onClick={() => setShowPrivacyModal(true)} 
-              className="hover:text-blue-600 dark:hover:text-sky-400 transition-colors flex items-center gap-1.5"
+              className="text-stone-700 dark:text-slate-300 hover:text-blue-700 dark:hover:text-sky-300 transition-colors flex items-center gap-1.5 cursor-pointer"
             >
-              <ShieldCheck className="w-4 h-4 text-blue-600 dark:text-sky-400" />
+              <ShieldCheck className="w-4 h-4 text-blue-700 dark:text-sky-400" />
               Privacy & Cookie Policy
             </button>
-            <a href={personalInfo.github} aria-label="Profilo GitHub" target="_blank" rel="noopener noreferrer" className="hover:text-blue-600 dark:hover:text-sky-400 transition-colors">GitHub</a>
-            <button onClick={() => setShowContactModal(true)} aria-label="Contatto Email" className="hover:text-blue-600 dark:hover:text-sky-400 transition-colors cursor-pointer">Contatti</button>
+            <a href={personalInfo.github} aria-label="Profilo GitHub" target="_blank" rel="noopener noreferrer" className="text-stone-700 dark:text-slate-300 hover:text-blue-700 dark:hover:text-sky-300 transition-colors">GitHub</a>
+            <button onClick={() => setShowContactModal(true)} aria-label="Contatto Email" className="text-stone-700 dark:text-slate-300 hover:text-blue-700 dark:hover:text-sky-300 transition-colors cursor-pointer">Contatti</button>
           </div>
         </div>
       </footer>
@@ -554,20 +591,20 @@ export default function App() {
               </div>
               <button 
                 onClick={() => setShowContactModal(false)}
-                className="p-1.5 rounded-full hover:bg-stone-100 dark:hover:bg-slate-800 text-stone-500 dark:text-slate-400 transition-colors cursor-pointer"
+                className="p-1.5 rounded-full hover:bg-stone-100 dark:hover:bg-slate-800 text-stone-600 dark:text-slate-400 transition-colors cursor-pointer"
                 aria-label="Chiudi"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
-            <p className="text-sm text-stone-600 dark:text-slate-300">
+            <p className="text-sm text-stone-700 dark:text-slate-300">
               Scegli la modalità che preferisci per metterti in contatto con me:
             </p>
 
             {/* Email Box with Copy */}
             <div className="p-4 bg-stone-50 dark:bg-slate-950 rounded-xl border border-stone-200 dark:border-slate-800/80 space-y-3">
-              <div className="text-xs font-semibold uppercase tracking-wider text-stone-500 dark:text-slate-400">Indirizzo Email</div>
+              <div className="text-xs font-semibold uppercase tracking-wider text-stone-600 dark:text-slate-300">Indirizzo Email</div>
               <div className="flex items-center justify-between gap-3">
                 <span className="font-mono text-sm md:text-base font-bold text-stone-900 dark:text-white truncate">
                   {personalInfo.email}
@@ -614,8 +651,8 @@ export default function App() {
 
             {/* Location */}
             <div className="pt-3 border-t border-stone-100 dark:border-slate-800 space-y-2.5 text-sm">
-              <div className="flex items-center gap-2 text-stone-500 dark:text-slate-400 text-xs">
-                <MapPin className="w-4 h-4 text-stone-400" />
+              <div className="flex items-center gap-2 text-stone-600 dark:text-slate-300 text-xs">
+                <MapPin className="w-4 h-4 text-stone-500 dark:text-slate-400" />
                 <span>{personalInfo.location}</span>
               </div>
             </div>
@@ -643,26 +680,26 @@ export default function App() {
               </div>
               <button 
                 onClick={() => setShowPrivacyModal(false)}
-                className="p-1.5 rounded-full hover:bg-stone-100 dark:hover:bg-slate-800 text-stone-500 dark:text-slate-400 transition-colors"
+                className="p-1.5 rounded-full hover:bg-stone-100 dark:hover:bg-slate-800 text-stone-600 dark:text-slate-400 transition-colors"
                 aria-label="Chiudi"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
             
-            <div className="space-y-3 text-sm leading-relaxed text-stone-600 dark:text-slate-300">
+            <div className="space-y-3 text-sm leading-relaxed text-stone-700 dark:text-slate-300">
               <p>
                 <strong>Informativa sulla Privacy e sui Cookie (GDPR):</strong>
               </p>
               <p>
                 Questo sito web è un portfolio personale a scopo informativo e non commerciale.
               </p>
-              <ul className="list-disc pl-5 space-y-1.5 text-stone-600 dark:text-slate-400">
+              <ul className="list-disc pl-5 space-y-1.5 text-stone-700 dark:text-slate-300">
                 <li><strong>Nessun Cookie di Tracciamento:</strong> Non vengono utilizzati cookie di profilazione, tracciamento o analitici di terze parti (es. Google Analytics).</li>
                 <li><strong>Assenza di Dati Personali Raccoglibili:</strong> Il sito non raccoglie nè memorizza dati personali tramite form o database.</li>
                 <li><strong>Contatti:</strong> Se invii un'email all'indirizzo indicato, i tuoi dati saranno trattati solo ed esclusivamente per rispondere alla richiesta.</li>
               </ul>
-              <p className="text-xs text-stone-500 dark:text-slate-500 pt-2 border-t border-stone-100 dark:border-slate-800/80">
+              <p className="text-xs text-stone-600 dark:text-slate-400 pt-2 border-t border-stone-100 dark:border-slate-800/80">
                 In conformità con il Regolamento UE 2016/679 (GDPR) e le direttive ePrivacy.
               </p>
             </div>
