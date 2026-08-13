@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
-import { Github, Mail, MapPin, Phone, Calendar, Code2, GraduationCap, Briefcase, Award, ExternalLink, User, Star, GitFork, BookOpen, Users, Linkedin, Terminal, Download, Sun, Moon, ShieldCheck, X, LineChart } from 'lucide-react';
+import { Github, Mail, MapPin, Calendar, Code2, GraduationCap, Briefcase, Award, ExternalLink, User, Star, GitFork, BookOpen, Users, Linkedin, Terminal, Download, Sun, Moon, ShieldCheck, X, LineChart, Copy, Check } from 'lucide-react';
 import { personalInfo, education, experience, projects, skills, certifications } from './data';
 
 const XIcon = ({ className }: { className?: string }) => (
@@ -62,6 +62,14 @@ export default function App() {
   const [isLoadingGithub, setIsLoadingGithub] = useState(true);
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [showPrivacyModal, setShowPrivacyModal] = useState(false);
+  const [showContactModal, setShowContactModal] = useState(false);
+  const [copiedEmail, setCopiedEmail] = useState(false);
+
+  const handleCopyEmail = () => {
+    navigator.clipboard.writeText(personalInfo.email);
+    setCopiedEmail(true);
+    setTimeout(() => setCopiedEmail(false), 2000);
+  };
 
   useEffect(() => {
     if (isDarkMode) {
@@ -197,10 +205,10 @@ export default function App() {
                 <Download className="w-4 h-4" aria-hidden="true" />
                 Scarica CV
               </a>
-              <a href={`mailto:${personalInfo.email}`} aria-label="Invia un'email a Valerio Cola" className="flex items-center gap-2 px-6 py-3 bg-white dark:bg-slate-900/40 hover:bg-stone-50 dark:hover:bg-slate-800/60 dark:bg-slate-950 text-stone-800 dark:text-slate-200 border border-stone-200 dark:border-slate-800/60 shadow-sm font-medium rounded-full transition-all">
+              <button onClick={() => setShowContactModal(true)} aria-label="Invia un'email a Valerio Cola" className="flex items-center gap-2 px-6 py-3 bg-white dark:bg-slate-900/40 hover:bg-stone-50 dark:hover:bg-slate-800/60 dark:bg-slate-950 text-stone-800 dark:text-slate-200 border border-stone-200 dark:border-slate-800/60 shadow-sm font-medium rounded-full transition-all cursor-pointer">
                 <Mail className="w-4 h-4" aria-hidden="true" />
                 Contattami
-              </a>
+              </button>
               <a href={personalInfo.github} aria-label="Visita il profilo GitHub di Valerio Cola" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 px-6 py-3 bg-stone-900 dark:bg-slate-800 hover:bg-stone-800 dark:hover:bg-slate-700 text-white shadow-sm font-medium rounded-full transition-all">
                 <Github className="w-4 h-4" aria-hidden="true" />
                 GitHub
@@ -223,14 +231,13 @@ export default function App() {
                   <MapPin className="w-5 h-5 text-blue-500 dark:text-sky-400" />
                   <span className="font-medium">{personalInfo.location}</span>
                 </div>
-                <div className="flex items-center gap-3 text-stone-700 dark:text-slate-300">
-                  <Mail className="w-5 h-5 text-blue-500 dark:text-sky-400" />
-                  <span className="font-medium">{personalInfo.email}</span>
-                </div>
-                <div className="flex items-center gap-3 text-stone-700 dark:text-slate-300">
-                  <Phone className="w-5 h-5 text-blue-500 dark:text-sky-400" />
-                  <span className="font-medium">{personalInfo.phone}</span>
-                </div>
+                <button 
+                  onClick={() => setShowContactModal(true)} 
+                  className="w-full flex items-center gap-3 text-stone-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-sky-400 transition-colors text-left group cursor-pointer"
+                >
+                  <Mail className="w-5 h-5 text-blue-500 dark:text-sky-400 group-hover:scale-110 transition-transform" />
+                  <span className="font-medium truncate">{personalInfo.email}</span>
+                </button>
                 {githubProfile && (
                   <div className="flex items-center gap-3 text-stone-600 dark:text-slate-400 pt-4 border-t border-stone-100 dark:border-slate-800/60">
                     <Users className="w-5 h-5 text-blue-500 dark:text-sky-400" />
@@ -531,10 +538,99 @@ export default function App() {
               Privacy & Cookie Policy
             </button>
             <a href={personalInfo.github} aria-label="Profilo GitHub" target="_blank" rel="noopener noreferrer" className="hover:text-blue-600 dark:hover:text-sky-400 transition-colors">GitHub</a>
-            <a href={`mailto:${personalInfo.email}`} aria-label="Contatto Email" target="_blank" rel="noopener noreferrer" className="hover:text-blue-600 dark:hover:text-sky-400 transition-colors">Contatti</a>
+            <button onClick={() => setShowContactModal(true)} aria-label="Contatto Email" className="hover:text-blue-600 dark:hover:text-sky-400 transition-colors cursor-pointer">Contatti</button>
           </div>
         </div>
       </footer>
+
+      {/* Contact Modal */}
+      {showContactModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-stone-900/60 dark:bg-black/70 backdrop-blur-sm animate-fade-in">
+          <div className="bg-white dark:bg-slate-900 border border-stone-200 dark:border-slate-800 rounded-2xl max-w-md w-full p-6 shadow-2xl relative space-y-5 text-stone-800 dark:text-slate-200">
+            <div className="flex items-center justify-between pb-3 border-b border-stone-100 dark:border-slate-800">
+              <div className="flex items-center gap-2 font-bold text-lg text-stone-900 dark:text-white">
+                <Mail className="w-5 h-5 text-blue-600 dark:text-sky-400" />
+                Contattami
+              </div>
+              <button 
+                onClick={() => setShowContactModal(false)}
+                className="p-1.5 rounded-full hover:bg-stone-100 dark:hover:bg-slate-800 text-stone-500 dark:text-slate-400 transition-colors cursor-pointer"
+                aria-label="Chiudi"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <p className="text-sm text-stone-600 dark:text-slate-300">
+              Scegli la modalità che preferisci per metterti in contatto con me:
+            </p>
+
+            {/* Email Box with Copy */}
+            <div className="p-4 bg-stone-50 dark:bg-slate-950 rounded-xl border border-stone-200 dark:border-slate-800/80 space-y-3">
+              <div className="text-xs font-semibold uppercase tracking-wider text-stone-500 dark:text-slate-400">Indirizzo Email</div>
+              <div className="flex items-center justify-between gap-3">
+                <span className="font-mono text-sm md:text-base font-bold text-stone-900 dark:text-white truncate">
+                  {personalInfo.email}
+                </span>
+                <button
+                  onClick={handleCopyEmail}
+                  className="flex items-center gap-1.5 px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium rounded-lg transition-colors shadow-sm shrink-0 cursor-pointer"
+                >
+                  {copiedEmail ? (
+                    <>
+                      <Check className="w-3.5 h-3.5 text-emerald-300" />
+                      Copiato!
+                    </>
+                  ) : (
+                    <>
+                      <Copy className="w-3.5 h-3.5" />
+                      Copia
+                    </>
+                  )}
+                </button>
+              </div>
+            </div>
+
+            {/* Direct Webmail & App Action Links */}
+            <div className="grid grid-cols-1 gap-2.5">
+              <a
+                href={`https://mail.google.com/mail/?view=cm&fs=1&to=${personalInfo.email}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-center gap-2 p-3 bg-red-600 hover:bg-red-700 text-white text-sm font-medium rounded-xl transition-colors shadow-sm"
+              >
+                <Mail className="w-4 h-4" />
+                Apri in Gmail Web (Desktop / PC)
+              </a>
+
+              <a
+                href={`mailto:${personalInfo.email}`}
+                className="flex items-center justify-center gap-2 p-3 bg-stone-100 dark:bg-slate-800 hover:bg-stone-200 dark:hover:bg-slate-700 text-stone-800 dark:text-slate-200 text-sm font-medium rounded-xl transition-colors"
+              >
+                <ExternalLink className="w-4 h-4" />
+                Apri Client Email Predefinito (Mobile)
+              </a>
+            </div>
+
+            {/* Location */}
+            <div className="pt-3 border-t border-stone-100 dark:border-slate-800 space-y-2.5 text-sm">
+              <div className="flex items-center gap-2 text-stone-500 dark:text-slate-400 text-xs">
+                <MapPin className="w-4 h-4 text-stone-400" />
+                <span>{personalInfo.location}</span>
+              </div>
+            </div>
+
+            <div className="pt-2 flex justify-end">
+              <button
+                onClick={() => setShowContactModal(false)}
+                className="px-5 py-2 bg-stone-200 dark:bg-slate-800 hover:bg-stone-300 dark:hover:bg-slate-700 text-stone-800 dark:text-slate-200 text-sm font-medium rounded-xl transition-colors cursor-pointer"
+              >
+                Chiudi
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Privacy Policy Modal */}
       {showPrivacyModal && (

@@ -4,7 +4,6 @@ export const personalInfo = {
   name: "Valerio Cola",
   role: "Junior Software Developer",
   email: "valeriocola2003@gmail.com",
-  phone: "3387516958",
   location: "Roma, Italia",
   github: "https://github.com/Valerio-Cola",
   birthDate: "02/07/2003",
