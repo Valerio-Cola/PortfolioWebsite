@@ -1,0 +1,30 @@
+# Valerio Cola - Junior Software Developer
+
+> Portfolio professionale di Valerio Cola, Junior Software Developer laureato in Informatica presso Sapienza Università di Roma, specializzato in High Performance Computing (HPC), C/C++, Java e Python.
+
+## Informazioni Principali
+- **Nome**: Valerio Cola
+- **Ruolo**: Junior Software Developer
+- **Posizione**: Roma, Italia
+- **Email**: [valeriocola2003@gmail.com](mailto:valeriocola2003@gmail.com)
+- **Sito Web**: [https://valeriocola.it](https://valeriocola.it)
+- **Curriculum Vitae (PDF)**: [https://valeriocola.it/CV_Valerio_Cola.pdf](https://valeriocola.it/CV_Valerio_Cola.pdf)
+- **GitHub**: [https://github.com/Valerio-Cola](https://github.com/Valerio-Cola)
+- **LinkedIn**: [https://www.linkedin.com/in/valerio-cola](https://www.linkedin.com/in/valerio-cola)
+
+## Profilo Professionale
+Laureato in Informatica presso Sapienza Università di Roma con solida preparazione in algoritmi, strutture dati e calcolo ad alte prestazioni (HPC). Esperienza nello sviluppo software in C/C++, Java e Python, programmazione parallela e distribuita (OpenMP, MPI, CUDA).
+
+## Esperienza & Formazione
+- **Tirocinio Curriculare di Ricerca (Lab HPC)** - Sapienza Università di Roma (2026): Simulatore trace-driven per Proxy Applications in C++.
+- **Laurea Triennale in Informatica** - Università di Roma La Sapienza (2022 – 2026, Voto: 101/110).
+
+## Progetti Principali
+- [RACER (GitHub)](https://github.com/Valerio-Cola/RACER): Sistema di guida autonoma con Raspberry Pi, Arduino Mega, YOLOv5s e OpenCV.
+- [Salary Tracker (GitHub)](https://github.com/Valerio-Cola/SalaryTracker): Applicazione web per monitoraggio e analisi finanziaria con TypeScript, React e Cloudflare Workers.
+- [Salary Tracker Demo Live](https://salarytracker.companyclstudio.workers.dev/)
+
+## Competenze Tecniche
+- **Linguaggi**: C, C++, Java, Python, TypeScript, SQL, Bash
+- **HPC & Parallel Computing**: OpenMP, MPI, CUDA, HIP
+- **Strumenti & OS**: Linux, Git, Profiling & Debugging, Cloudflare Workers
