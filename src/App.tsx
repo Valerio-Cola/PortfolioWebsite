@@ -1,7 +1,41 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
-import { Github, Mail, MapPin, Calendar, Code2, GraduationCap, Briefcase, Award, ExternalLink, User, Star, GitFork, BookOpen, Users, Linkedin, Terminal, Download, Sun, Moon, ShieldCheck, X, LineChart, Copy, Check } from 'lucide-react';
-import { personalInfo, education, experience, projects, skills, certifications } from './data';
+import { 
+  Github, 
+  Mail, 
+  MapPin, 
+  Code2, 
+  GraduationCap, 
+  Briefcase, 
+  Award, 
+  ExternalLink, 
+  User, 
+  Star, 
+  GitFork, 
+  BookOpen, 
+  Users, 
+  Linkedin, 
+  Terminal, 
+  Download, 
+  Sun, 
+  Moon, 
+  ShieldCheck, 
+  X, 
+  LineChart, 
+  Copy, 
+  Check,
+  Cpu,
+  Layers,
+  Activity,
+  Globe,
+  Zap,
+  CheckCircle2,
+  Server,
+  Binary,
+  Languages
+} from 'lucide-react';
+import { personalInfo } from './data';
+import { translations, Language } from './i18n';
 
 const XIcon = ({ className }: { className?: string }) => (
   <svg viewBox="0 0 24 24" fill="currentColor" className={className} aria-hidden="true">
@@ -9,27 +43,36 @@ const XIcon = ({ className }: { className?: string }) => (
   </svg>
 );
 
-const getSkillHoverClass = (skill: string) => {
+const getSkillBadgeStyle = (skill: string) => {
   const s = skill.toLowerCase();
-  if (s.includes('java') && !s.includes('javascript')) return 'hover:text-yellow-700 hover:border-yellow-600/50 hover:bg-yellow-50';
-  if (s.includes('c/c++') || s === 'c' || s === 'c++') return 'hover:text-blue-700 dark:text-sky-300 dark:hover:text-sky-300 hover:border-blue-600/50 hover:bg-blue-50 dark:bg-sky-500/10';
-  if (s.includes('python')) return 'hover:text-yellow-700 hover:border-yellow-500/50 hover:bg-yellow-50';
-  if (s.includes('javascript') || s.includes('typescript')) return 'hover:text-yellow-600 hover:border-yellow-500/50 hover:bg-yellow-50';
-  if (s.includes('linux')) return 'hover:text-orange-700 hover:border-orange-600/50 hover:bg-orange-50';
-  if (s.includes('git')) return 'hover:text-orange-700 hover:border-orange-600/50 hover:bg-orange-50';
-  if (s.includes('sql') || s.includes('db') || s.includes('database')) return 'hover:text-sky-700 hover:border-sky-600/50 hover:bg-sky-50';
-  if (s.includes('cuda') || s.includes('hip') || s.includes('gpu')) return 'hover:text-emerald-700 hover:border-emerald-600/50 hover:bg-emerald-50';
-  if (s.includes('oop') || s.includes('pattern')) return 'hover:text-purple-700 hover:border-purple-600/50 hover:bg-purple-50';
-  return 'hover:text-blue-600 dark:hover:text-sky-400 hover:border-blue-500/50 hover:bg-blue-50 dark:bg-sky-500/10';
+  if (s.includes('cuda') || s.includes('hip') || s.includes('gpu')) {
+    return 'bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border-emerald-500/20 hover:border-emerald-500/50';
+  }
+  if (s.includes('c++') || s === 'c' || s.includes('openmp') || s.includes('mpi')) {
+    return 'bg-sky-500/10 text-sky-700 dark:text-sky-400 border-sky-500/20 hover:border-sky-500/50';
+  }
+  if (s.includes('java')) {
+    return 'bg-amber-500/10 text-amber-700 dark:text-amber-400 border-amber-500/20 hover:border-amber-500/50';
+  }
+  if (s.includes('python')) {
+    return 'bg-blue-500/10 text-blue-700 dark:text-blue-400 border-blue-500/20 hover:border-blue-500/50';
+  }
+  if (s.includes('linux') || s.includes('posix') || s.includes('valgrind') || s.includes('gdb') || s.includes('bash')) {
+    return 'bg-orange-500/10 text-orange-700 dark:text-orange-400 border-orange-500/20 hover:border-orange-500/50';
+  }
+  if (s.includes('sql') || s.includes('relazionali') || s.includes('relational')) {
+    return 'bg-indigo-500/10 text-indigo-700 dark:text-indigo-400 border-indigo-500/20 hover:border-indigo-500/50';
+  }
+  return 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700/60 hover:border-slate-400';
 };
 
 function FadeIn({ children, delay = 0, className = "" }: { children: React.ReactNode, delay?: number, className?: string }) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
+      initial={{ opacity: 0, y: 16 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-50px" }}
-      transition={{ duration: 0.6, delay, ease: "easeOut" }}
+      viewport={{ once: true, margin: "-40px" }}
+      transition={{ duration: 0.5, delay, ease: "easeOut" }}
       className={className}
     >
       {children}
@@ -57,13 +100,16 @@ interface GithubRepo {
 }
 
 export default function App() {
+  const [lang, setLang] = useState<Language>('it');
   const [githubProfile, setGithubProfile] = useState<GithubProfile | null>(null);
   const [githubRepos, setGithubRepos] = useState<GithubRepo[]>([]);
   const [isLoadingGithub, setIsLoadingGithub] = useState(true);
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(true);
   const [showPrivacyModal, setShowPrivacyModal] = useState(false);
   const [showContactModal, setShowContactModal] = useState(false);
   const [copiedEmail, setCopiedEmail] = useState(false);
+
+  const t = translations[lang];
 
   const handleCopyEmail = () => {
     navigator.clipboard.writeText(personalInfo.email);
@@ -78,6 +124,11 @@ export default function App() {
       document.documentElement.classList.remove('dark');
     }
   }, [isDarkMode]);
+
+  useEffect(() => {
+    // Update document lang attribute
+    document.documentElement.lang = lang;
+  }, [lang]);
 
   useEffect(() => {
     // Fetch GitHub Profile and Repos concurrently (non-blocking)
@@ -128,13 +179,13 @@ export default function App() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-stone-50 dark:bg-slate-950 text-stone-900 dark:text-white font-sans selection:bg-blue-500/20 selection:dark:bg-sky-500/30">
+    <div className="min-h-screen bg-slate-50 dark:bg-[#090d16] text-slate-900 dark:text-slate-100 font-sans selection:bg-blue-500/20 selection:dark:bg-sky-500/30">
       
-      {/* Navigation (Simple Sticky Header) */}
-      <header className="fixed top-0 w-full z-50 bg-white/80 dark:bg-slate-950/80 backdrop-blur-md border-b border-stone-200 dark:border-slate-800/60 shadow-sm">
-        <div className="max-w-5xl mx-auto px-6 py-4 flex justify-between items-center">
+      {/* Navigation (Precision Header) */}
+      <header className="fixed top-0 w-full z-50 bg-white/85 dark:bg-[#090d16]/85 backdrop-blur-md border-b border-slate-200 dark:border-slate-800/80 shadow-xs">
+        <div className="max-w-6xl mx-auto px-6 py-3.5 flex justify-between items-center relative z-10">
           <div className="flex items-center gap-3">
-            <picture className="w-8 h-8 rounded-full overflow-hidden shrink-0 border border-stone-200 dark:border-slate-800/60 shadow-sm flex items-center justify-center">
+            <picture className="w-8 h-8 rounded-lg overflow-hidden shrink-0 border border-slate-200 dark:border-slate-800 shadow-xs flex items-center justify-center bg-slate-100 dark:bg-slate-900">
               <source srcSet="/profile.webp" type="image/webp" />
               <img 
                 src="/profile.jpg" 
@@ -146,338 +197,577 @@ export default function App() {
                 className="w-full h-full object-cover" 
               />
             </picture>
-            <span className="font-bold text-xl tracking-tight text-stone-900 dark:text-white">{personalInfo.name}</span>
+            <div className="flex flex-col">
+              <span className="font-bold text-base tracking-tight text-slate-900 dark:text-white leading-none">{personalInfo.name}</span>
+            </div>
           </div>
-          <nav className="hidden md:flex items-center gap-6 text-sm font-medium text-stone-700 dark:text-slate-300">
-            <a href="#about" className="hover:text-blue-700 dark:hover:text-sky-300 transition-colors py-1">Profilo</a>
-            <a href="#education" className="hover:text-blue-700 dark:hover:text-sky-300 transition-colors py-1">Formazione</a>
-            <a href="#skills" className="hover:text-blue-700 dark:hover:text-sky-300 transition-colors py-1">Competenze</a>
-            <a href="#experience" className="hover:text-blue-700 dark:hover:text-sky-300 transition-colors py-1">Esperienza</a>
-            <a href="#projects" className="hover:text-blue-700 dark:hover:text-sky-300 transition-colors py-1">Progetti</a>
-            <a href="#github" className="hover:text-blue-700 dark:hover:text-sky-300 transition-colors py-1">GitHub</a>
-            <button onClick={() => setIsDarkMode(!isDarkMode)} aria-label="Cambia tema scuro/chiaro" className="p-2 rounded-full hover:bg-stone-200 dark:hover:bg-slate-800 transition-colors ml-2 flex items-center justify-center">
-              {isDarkMode ? <Sun className="w-5 h-5 text-yellow-400" /> : <Moon className="w-5 h-5 text-stone-700 dark:text-slate-300" />}
+
+          <nav className="hidden md:flex items-center gap-1 text-sm font-medium text-slate-700 dark:text-slate-300">
+            <a href="#about" className="px-3 py-1.5 rounded-lg hover:text-blue-600 dark:hover:text-sky-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 transition-all">{t.nav.about}</a>
+            <a href="#skills" className="px-3 py-1.5 rounded-lg hover:text-blue-600 dark:hover:text-sky-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 transition-all">{t.nav.skills}</a>
+            <a href="#projects" className="px-3 py-1.5 rounded-lg hover:text-blue-600 dark:hover:text-sky-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 transition-all">{t.nav.projects}</a>
+            <a href="#experience" className="px-3 py-1.5 rounded-lg hover:text-blue-600 dark:hover:text-sky-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 transition-all">{t.nav.experience}</a>
+            <a href="#education" className="px-3 py-1.5 rounded-lg hover:text-blue-600 dark:hover:text-sky-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 transition-all">{t.nav.education}</a>
+            <a href="#github" className="px-3 py-1.5 rounded-lg hover:text-blue-600 dark:hover:text-sky-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 transition-all">GitHub</a>
+            
+            <div className="w-px h-5 bg-slate-200 dark:bg-slate-800 mx-2"></div>
+
+            {/* Language Switcher */}
+            <button
+              onClick={() => setLang(lang === 'it' ? 'en' : 'it')}
+              aria-label={`Cambia lingua (attuale: ${lang.toUpperCase()})`}
+              className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg border border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 bg-slate-100/80 dark:bg-slate-800/80 text-xs font-mono font-bold text-slate-800 dark:text-slate-200 transition-colors cursor-pointer"
+            >
+              <Languages className="w-3.5 h-3.5 text-blue-600 dark:text-sky-400" />
+              <span>{lang === 'it' ? 'EN' : 'IT'}</span>
+            </button>
+
+            {/* Theme Toggle */}
+            <button 
+              onClick={() => setIsDarkMode(!isDarkMode)} 
+              aria-label="Cambia tema scuro/chiaro" 
+              className="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 transition-colors flex items-center justify-center cursor-pointer"
+            >
+              {isDarkMode ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4 text-slate-700" />}
             </button>
           </nav>
-          <div className="md:hidden flex items-center">
-             <button onClick={() => setIsDarkMode(!isDarkMode)} aria-label="Cambia tema scuro/chiaro" className="p-2 rounded-full hover:bg-stone-200 dark:hover:bg-slate-800 transition-colors">
-              {isDarkMode ? <Sun className="w-5 h-5 text-yellow-400" /> : <Moon className="w-5 h-5 text-stone-700 dark:text-slate-300" />}
+
+          <div className="md:hidden flex items-center gap-2">
+            {/* Mobile Language Switcher */}
+            <button
+              onClick={() => setLang(lang === 'it' ? 'en' : 'it')}
+              aria-label={`Cambia lingua (attuale: ${lang.toUpperCase()})`}
+              className="flex items-center gap-1 px-2.5 py-1 rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-100 dark:bg-slate-800 text-xs font-mono font-bold text-slate-800 dark:text-slate-200"
+            >
+              <Languages className="w-3.5 h-3.5 text-blue-600 dark:text-sky-400" />
+              <span>{lang === 'it' ? 'EN' : 'IT'}</span>
+            </button>
+
+            <button 
+              onClick={() => setIsDarkMode(!isDarkMode)} 
+              aria-label="Cambia tema scuro/chiaro" 
+              className="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 transition-colors"
+            >
+              {isDarkMode ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4 text-slate-700" />}
+            </button>
+            <button
+              onClick={() => setShowContactModal(true)}
+              className="px-3 py-1.5 bg-blue-600 text-white text-xs font-semibold rounded-lg"
+            >
+              {t.nav.contact}
             </button>
           </div>
         </div>
       </header>
 
-      <main className="max-w-5xl mx-auto px-6 pt-32 pb-24 space-y-32">
+      <main className="max-w-6xl mx-auto px-6 pt-28 pb-20 space-y-24 relative z-10">
         
-        {/* Hero Section */}
-        <section id="hero" className="flex flex-col md:flex-row gap-12 items-center justify-between pt-10">
-          <div className="flex-1 space-y-6">
-            <motion.div 
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.7, ease: "easeOut" }}
-              className="flex items-center gap-6 mb-4"
-            >
-              <picture className="w-32 h-32 md:w-48 md:h-48 rounded-full overflow-hidden shrink-0 border-4 border-white dark:border-slate-800 shadow-xl ring-1 ring-stone-200 dark:ring-slate-800 flex items-center justify-center">
-                <source srcSet="/profile.webp" type="image/webp" />
-                <img 
-                  src="/profile.jpg" 
-                  alt={`Foto profilo di ${personalInfo.name}`} 
-                  width={400}
-                  height={400}
-                  fetchPriority="high"
-                  decoding="async"
-                  className="w-full h-full object-cover" 
-                />
-              </picture>
-              <div>
-                <h2 className="text-blue-600 dark:text-sky-400 font-bold tracking-wide uppercase text-sm mb-2">{personalInfo.role}</h2>
-                <h1 className="text-4xl md:text-6xl font-bold text-stone-900 dark:text-white tracking-tight">
-                  Ciao, sono <br/><span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-sky-400 dark:to-blue-600">{personalInfo.name}.</span>
-                </h1>
-              </div>
-            </motion.div>
+        {/* Hero Section: Systems & HPC Split-View */}
+        <section id="hero" className="pt-6">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
             
-            <motion.div 
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.5, delay: 0.3 }}
-            >
-              <p className="text-lg text-stone-700 dark:text-slate-300 max-w-xl leading-relaxed">
-                Appassionato di programmazione di sistema, algoritmi e High Performance Computing, con una solida base accademica e un forte approccio analitico.
-              </p>
-            </motion.div>
-            
-            <motion.div 
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.5, delay: 0.4 }}
-              className="flex flex-wrap gap-4 pt-4"
-            >
-              <a href="/CV_Valerio_Cola.pdf" target="_blank" rel="noopener noreferrer" download="CV_Valerio_Cola.pdf" aria-label="Scarica il Curriculum Vitae di Valerio Cola" className="flex items-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white shadow-md hover:shadow-lg font-medium rounded-full transition-all">
-                <Download className="w-4 h-4" aria-hidden="true" />
-                Scarica CV
-              </a>
-              <button onClick={() => setShowContactModal(true)} aria-label="Invia un'email a Valerio Cola" className="flex items-center gap-2 px-6 py-3 bg-white dark:bg-slate-900/40 hover:bg-stone-50 dark:hover:bg-slate-800/60 dark:bg-slate-950 text-stone-800 dark:text-slate-200 border border-stone-200 dark:border-slate-800/60 shadow-sm font-medium rounded-full transition-all cursor-pointer">
-                <Mail className="w-4 h-4" aria-hidden="true" />
-                Contattami
-              </button>
-              <a href={personalInfo.github} aria-label="Visita il profilo GitHub di Valerio Cola" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 px-6 py-3 bg-stone-900 dark:bg-slate-800 hover:bg-stone-800 dark:hover:bg-slate-700 text-white shadow-sm font-medium rounded-full transition-all">
-                <Github className="w-4 h-4" aria-hidden="true" />
-                GitHub
-              </a>
-              <a href="https://salarytracker.valeriocola.it/" aria-label="Visita il sito web di SalaryTracker" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white shadow-md hover:shadow-lg font-medium rounded-full transition-all">
-                <LineChart className="w-4 h-4" aria-hidden="true" />
-                SalaryTracker
-              </a>
-            </motion.div>
-          </div>
-          
-          <motion.div 
-             initial={{ opacity: 0, x: 20 }}
-             animate={{ opacity: 1, x: 0 }}
-             transition={{ duration: 0.7, delay: 0.2 }}
-             className="w-full md:w-80 space-y-4"
-          >
-             <div className="bg-white dark:bg-slate-900/40 p-6 rounded-2xl border border-stone-200 dark:border-slate-800/60 shadow-sm space-y-4">
-                <div className="flex items-center gap-3 text-stone-700 dark:text-slate-300">
-                  <MapPin className="w-5 h-5 text-blue-500 dark:text-sky-400" />
-                  <span className="font-medium">{personalInfo.location}</span>
+            {/* Left Col: Core Identity & CTAs */}
+            <div className="lg:col-span-7 space-y-6">
+              
+              {/* Profile Head & Title */}
+              <div className="flex items-center gap-5">
+                <picture className="w-24 h-24 md:w-28 md:h-28 rounded-2xl overflow-hidden shrink-0 border-2 border-slate-200 dark:border-slate-800 shadow-md bg-slate-100 dark:bg-slate-900">
+                  <source srcSet="/profile.webp" type="image/webp" />
+                  <img 
+                    src="/profile.jpg" 
+                    alt={`Foto profilo di ${personalInfo.name}`} 
+                    width={400}
+                    height={400}
+                    fetchPriority="high"
+                    decoding="async"
+                    className="w-full h-full object-cover" 
+                  />
+                </picture>
+                <div>
+                  <div className="text-xs font-mono font-bold uppercase tracking-wider text-blue-600 dark:text-sky-400 mb-1">
+                    {t.hero.institution}
+                  </div>
+                  <h1 className="text-3xl md:text-5xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-cyan-500 dark:from-blue-400 dark:to-cyan-300">
+                    {personalInfo.name}
+                  </h1>
+                  <p className="text-base md:text-lg font-semibold text-slate-700 dark:text-slate-300 mt-1">
+                    {t.hero.role}
+                  </p>
                 </div>
+              </div>
+
+              {/* Bio Pitch */}
+              <p className="text-slate-700 dark:text-slate-300 text-base md:text-lg leading-relaxed max-w-xl">
+                {lang === 'it' ? (
+                  <>
+                    Laureato in <strong className="text-slate-900 dark:text-white">Informatica</strong> con focus su <span className="text-blue-600 dark:text-sky-400 font-semibold">programmazione di sistema, C/C++ e High Performance Computing</span>. Esperienza pratica su architetture parallele (MPI, OpenMP, CUDA, HIP), algoritmi e sviluppo distribuito.
+                  </>
+                ) : (
+                  <>
+                    Graduated in <strong className="text-slate-900 dark:text-white">Computer Science</strong> with a focus on <span className="text-blue-600 dark:text-sky-400 font-semibold">systems programming, C/C++, and High Performance Computing</span>. Hands-on experience with parallel architectures (MPI, OpenMP, CUDA, HIP), algorithms, and distributed computing.
+                  </>
+                )}
+              </p>
+
+              {/* Action Buttons Bar */}
+              <div className="flex flex-wrap items-center gap-3 pt-2">
+                <a 
+                  href="/CV_Valerio_Cola.pdf" 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  download="CV_Valerio_Cola.pdf" 
+                  aria-label="Scarica il Curriculum Vitae di Valerio Cola" 
+                  className="flex items-center gap-2 px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white shadow-sm hover:shadow font-medium text-sm rounded-xl transition-all"
+                >
+                  <Download className="w-4 h-4" aria-hidden="true" />
+                  {t.hero.downloadCv}
+                </a>
+                
                 <button 
                   onClick={() => setShowContactModal(true)} 
-                  className="w-full flex items-center gap-3 text-stone-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-sky-400 transition-colors text-left group cursor-pointer"
+                  aria-label="Invia un'email a Valerio Cola" 
+                  className="flex items-center gap-2 px-5 py-2.5 bg-white dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-800 dark:text-slate-200 border border-slate-300 dark:border-slate-800 shadow-xs font-medium text-sm rounded-xl transition-all cursor-pointer"
                 >
-                  <Mail className="w-5 h-5 text-blue-500 dark:text-sky-400 group-hover:scale-110 transition-transform" />
-                  <span className="font-medium truncate">{personalInfo.email}</span>
+                  <Mail className="w-4 h-4" aria-hidden="true" />
+                  {t.hero.contactMe}
                 </button>
-                {isLoadingGithub ? (
-                  <div className="flex items-center gap-3 text-stone-500 dark:text-slate-400 pt-4 border-t border-stone-100 dark:border-slate-800/60 animate-pulse">
-                    <Users className="w-5 h-5 text-stone-400 dark:text-slate-600" />
-                    <div className="h-4 w-36 bg-stone-200 dark:bg-slate-800 rounded"></div>
-                  </div>
-                ) : githubProfile ? (
-                  <div className="flex items-center gap-3 text-stone-700 dark:text-slate-300 pt-4 border-t border-stone-100 dark:border-slate-800/60">
-                    <Users className="w-5 h-5 text-blue-600 dark:text-sky-400" />
-                    <span className="text-sm font-medium">{githubProfile.followers} Follower &middot; {githubProfile.public_repos} Repos</span>
-                  </div>
-                ) : null}
-                {personalInfo.socials && personalInfo.socials.length > 0 && (
-                  <div className="pt-4 border-t border-stone-100 dark:border-slate-800/60">
-                    <div className="flex flex-wrap gap-2">
-                      {personalInfo.socials.map((social, idx) => {
-                        let Icon: any = Github;
-                        if (social.name === "LinkedIn") Icon = Linkedin;
-                        if (social.name === "X") Icon = XIcon;
-                        
-                        return (
-                          <a 
-                            key={idx}
-                            href={social.url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="flex items-center gap-2 px-3 py-1.5 bg-stone-50 dark:bg-slate-950 text-stone-700 dark:text-slate-300 hover:text-blue-700 dark:hover:text-sky-300 text-xs font-medium rounded-full border border-stone-200 dark:border-slate-800/60 hover:border-blue-300 dark:hover:border-sky-500/50 hover:bg-blue-50 dark:hover:bg-sky-500/10 transition-all shadow-sm"
-                          >
-                            <Icon className="w-3.5 h-3.5" />
-                            {social.handle}
-                          </a>
-                        );
-                      })}
-                    </div>
-                  </div>
-                )}
-             </div>
-          </motion.div>
-        </section>
 
-        {/* About Section */}
-        <section id="about" className="scroll-mt-32">
-          <FadeIn>
-            <div className="flex items-center gap-3 mb-8">
-              <User className="w-6 h-6 text-blue-600 dark:text-sky-400" />
-              <h2 className="text-3xl font-bold text-stone-900 dark:text-white">Profilo</h2>
-            </div>
-            
-            <div className="bg-white dark:bg-slate-900/40 p-8 md:p-10 rounded-3xl border border-stone-200 dark:border-slate-800/60 shadow-sm relative overflow-hidden group hover:border-blue-200 dark:hover:border-sky-500/30 transition-colors">
-              {/* Decorative Element */}
-              <div className="absolute -top-12 -right-12 p-12 opacity-[0.03] pointer-events-none transition-transform group-hover:scale-110 group-hover:-rotate-12 duration-700">
-                <Terminal className="w-64 h-64 text-blue-900" />
+                <a 
+                  href={personalInfo.github} 
+                  aria-label="Visita il profilo GitHub di Valerio Cola" 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="flex items-center gap-2 px-4 py-2.5 bg-slate-900 dark:bg-slate-800 hover:bg-slate-800 dark:hover:bg-slate-700 text-white shadow-xs font-medium text-sm rounded-xl transition-all"
+                >
+                  <Github className="w-4 h-4" aria-hidden="true" />
+                  GitHub
+                </a>
+
+                <a 
+                  href="https://salarytracker.valeriocola.it/" 
+                  aria-label="Visita il sito web di SalaryTracker" 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="flex items-center gap-2 px-4 py-2.5 bg-purple-600 hover:bg-purple-700 text-white shadow-xs font-medium text-sm rounded-xl transition-all"
+                >
+                  <LineChart className="w-4 h-4" aria-hidden="true" />
+                  SalaryTracker
+                </a>
               </div>
-              
-              <div className="relative z-10 space-y-6">
-                <p className="text-xl md:text-2xl font-medium text-stone-800 dark:text-slate-200 leading-relaxed max-w-3xl">
-                  Laureato in <span className="text-blue-600 dark:text-sky-400 font-bold">Informatica</span> presso Sapienza Università di Roma con una solida preparazione in <span className="text-stone-900 dark:text-white font-bold">algoritmi, strutture dati e programmazione parallela</span>.
-                </p>
+
+              {/* Social Pills */}
+              {personalInfo.socials && personalInfo.socials.length > 0 && (
+                <div className="flex flex-wrap items-center gap-2 pt-1">
+                  <span className="text-xs font-mono text-slate-500 dark:text-slate-400 mr-1">Social:</span>
+                  {personalInfo.socials.map((social, idx) => {
+                    let Icon: any = Github;
+                    if (social.name === "LinkedIn") Icon = Linkedin;
+                    if (social.name === "X") Icon = XIcon;
+                    
+                    return (
+                      <a 
+                        key={idx}
+                        href={social.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-1.5 px-3 py-1 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-sky-400 text-xs font-medium rounded-lg border border-slate-200 dark:border-slate-800 hover:border-slate-400 transition-all shadow-xs"
+                      >
+                        <Icon className="w-3.5 h-3.5" />
+                        {social.handle}
+                      </a>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+
+            {/* Right Col: Interactive Systems Console / Spec Box */}
+            <div className="lg:col-span-5">
+              <div className="bg-slate-900 text-slate-200 rounded-2xl border border-slate-800 shadow-xl overflow-hidden font-mono text-xs">
                 
-                <p className="text-stone-700 dark:text-slate-300 text-lg leading-relaxed max-w-4xl">
-                  Ho maturato esperienza pratica nello sviluppo di progetti accademici utilizzando <span className="font-medium text-stone-900 dark:text-white">Java, C/C++ e Python</span>, dimostrando una forte attitudine al problem solving, alla programmazione ad oggetti (OOP) e alla progettazione software.
-                </p>
+                {/* Terminal Header */}
+                <div className="bg-slate-950 px-4 py-3 border-b border-slate-800 flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <span className="w-3 h-3 rounded-full bg-red-500/80 inline-block"></span>
+                    <span className="w-3 h-3 rounded-full bg-amber-500/80 inline-block"></span>
+                    <span className="w-3 h-3 rounded-full bg-emerald-500/80 inline-block"></span>
+                    <span className="ml-2 text-slate-400 text-[11px] font-sans font-medium">valerio@cola:~$</span>
+                  </div>
+                  <div className="flex items-center gap-1.5 text-[11px] text-slate-400">
+                    <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                    <span className="text-[10px] font-mono text-emerald-400">online</span>
+                  </div>
+                </div>
 
-                <p className="text-stone-700 dark:text-slate-300 text-lg leading-relaxed max-w-4xl">
-                  Particolarmente orientato alla programmazione di sistema e all'High Performance Computing con <span className="font-medium text-stone-900 dark:text-white">OpenMP, MPI, CUDA e HIP</span>, con attenzione all'ottimizzazione delle prestazioni, gestione della memoria, database relazionali e utilizzo dei tool di profiling e debugging in ambiente <span className="font-medium text-stone-900 dark:text-white">Linux</span>.
-                </p>
-              </div>
-            </div>
-          </FadeIn>
-        </section>
-
-        {/* Education & Certs */}
-        <section id="education" className="scroll-mt-32">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-            <FadeIn>
-              <div className="flex items-center gap-3 mb-8">
-                <GraduationCap className="w-6 h-6 text-blue-600 dark:text-sky-400" />
-                <h2 className="text-3xl font-bold text-stone-900 dark:text-white">Formazione</h2>
-              </div>
-              <div className="space-y-6">
-                {education.map((edu, idx) => (
-                  <div key={idx} className="bg-white dark:bg-slate-900/40 p-6 rounded-2xl border border-stone-200 dark:border-slate-800/60 shadow-sm hover:shadow-md transition-shadow">
-                    <h3 className="text-lg font-bold text-stone-900 dark:text-white mb-1">{edu.degree}</h3>
-                    <div className="text-blue-600 dark:text-sky-400 font-medium text-sm mb-3">{edu.institution}</div>
-                    <div className="flex justify-between items-center text-sm text-stone-600 dark:text-slate-300">
-                      <span>{edu.period} • {edu.location}</span>
-                      <span className="font-semibold text-stone-800 dark:text-slate-200">{edu.grade}</span>
+                {/* Terminal Body - Unified View */}
+                <div className="p-5 space-y-4 leading-relaxed">
+                  
+                  {/* System & Architecture */}
+                  <div className="space-y-1.5">
+                    <div className="text-slate-400 font-semibold text-[11px]">{t.terminal.specsTitle}</div>
+                    <div className="grid grid-cols-3 gap-1">
+                      <span className="text-slate-400 font-semibold">{t.terminal.osLabel}</span>
+                      <span className="col-span-2 text-emerald-400">Windows 11, Ubuntu, WSL</span>
+                    </div>
+                    <div className="grid grid-cols-3 gap-1">
+                      <span className="text-slate-400 font-semibold">{t.terminal.degreeLabel}</span>
+                      <span className="col-span-2 text-slate-200">{t.terminal.degreeValue}</span>
+                    </div>
+                    <div className="grid grid-cols-3 gap-1">
+                      <span className="text-slate-400 font-semibold">{t.terminal.coreStackLabel}</span>
+                      <span className="col-span-2 text-sky-400">C, C++, CUDA, MPI, Java, Python, SQL</span>
+                    </div>
+                    <div className="grid grid-cols-3 gap-1">
+                      <span className="text-slate-400 font-semibold">{t.terminal.toolsLabel}</span>
+                      <span className="col-span-2 text-amber-300">VSCode, WSL, Git, Valgrind, Make</span>
                     </div>
                   </div>
-                ))}
-              </div>
-            </FadeIn>
 
-            <FadeIn delay={0.2}>
-              <div className="flex items-center gap-3 mb-8">
-                <Award className="w-6 h-6 text-blue-600 dark:text-sky-400" />
-                <h2 className="text-3xl font-bold text-stone-900 dark:text-white">Certificazioni</h2>
-              </div>
-              <div className="bg-white dark:bg-slate-900/40 p-6 rounded-2xl border border-stone-200 dark:border-slate-800/60 shadow-sm space-y-4">
-                {certifications.map((cert, idx) => (
-                  <div key={idx} className="flex items-center gap-3">
-                    <div className="w-2 h-2 rounded-full bg-blue-600 dark:bg-sky-400"></div>
-                    <span className="text-stone-700 dark:text-slate-300 font-medium">{cert}</span>
+                  {/* Quick Reach & Coordinates */}
+                  <div className="pt-3 border-t border-slate-800 space-y-2">
+                    <div className="text-slate-400 font-semibold text-[11px]">{t.terminal.contactTitle}</div>
+                    <div className="flex items-center justify-between p-2 rounded bg-slate-950/60 border border-slate-800">
+                      <span className="text-slate-300 truncate text-[11px]">{personalInfo.email}</span>
+                      <button
+                        onClick={handleCopyEmail}
+                        className="px-2 py-1 bg-blue-600 hover:bg-blue-500 text-white rounded text-[10px] font-sans flex items-center gap-1 cursor-pointer transition-colors"
+                      >
+                        {copiedEmail ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />}
+                        {copiedEmail ? t.terminal.copied : t.terminal.copy}
+                      </button>
+                    </div>
+                    {githubProfile && (
+                      <div className="flex items-center gap-3 pt-1 text-[11px] text-slate-300">
+                        <Users className="w-3.5 h-3.5 text-sky-400" />
+                        <span>{githubProfile.followers} {t.terminal.followers} &middot; {githubProfile.public_repos} {t.terminal.repositories}</span>
+                      </div>
+                    )}
                   </div>
-                ))}
+
+                  {/* Terminal Prompt line */}
+                  <div className="pt-2 border-t border-slate-800 flex items-center gap-2 text-slate-500 text-[11px]">
+                    <span className="text-emerald-400">➜</span>
+                    <span className="text-sky-400">~/valeriocola</span>
+                    <span className="animate-pulse text-slate-200">_</span>
+                  </div>
+                </div>
+
               </div>
-            </FadeIn>
+            </div>
+
           </div>
         </section>
 
-        {/* Skills Section */}
-        <section id="skills" className="scroll-mt-32">
+        {/* About / Profile Section */}
+        <section id="about" className="scroll-mt-24">
           <FadeIn>
-            <div className="flex items-center gap-3 mb-8">
-              <Code2 className="w-6 h-6 text-blue-600 dark:text-sky-400" />
-              <h2 className="text-3xl font-bold text-stone-900 dark:text-white">Competenze</h2>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {skills.map((skillGroup, idx) => (
-                <div key={idx} className="bg-white dark:bg-slate-900/40 p-6 rounded-2xl border border-stone-200 dark:border-slate-800/60 shadow-sm hover:shadow-md transition-shadow">
-                  <h3 className="text-xl font-bold text-stone-900 dark:text-white mb-4">{skillGroup.category}</h3>
-                  <div className="flex flex-wrap gap-2">
-                    {skillGroup.items.map((item, i) => (
-                      <span key={i} className={`px-3 py-1.5 bg-stone-50 dark:bg-slate-950 text-stone-700 dark:text-slate-300 text-sm font-medium rounded-lg border border-stone-200 dark:border-slate-800/60 transition-colors duration-300 cursor-default ${getSkillHoverClass(item)}`}>
-                        {item}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </FadeIn>
-        </section>
-
-        {/* Experience Section */}
-        <section id="experience" className="scroll-mt-32">
-          <FadeIn>
-             <div className="flex items-center gap-3 mb-8">
-              <Briefcase className="w-6 h-6 text-blue-600 dark:text-sky-400" />
-              <h2 className="text-3xl font-bold text-stone-900 dark:text-white">Esperienza Professionale</h2>
-            </div>
-            <div className="space-y-6">
-              {experience.map((exp, idx) => (
-                <div key={idx} className="relative pl-8 md:pl-0">
-                   <div className="md:grid md:grid-cols-4 gap-6 items-start">
-                      <div className="hidden md:block text-stone-600 dark:text-slate-300 font-medium text-sm pt-1">
-                         {exp.period}
-                      </div>
-                      <div className="md:col-span-3 relative pb-8 md:pb-0">
-                         {/* Timeline line */}
-                         <div className="absolute left-[-33px] md:left-[-25px] top-2 w-px h-full bg-stone-300 dark:bg-slate-700"></div>
-                         {/* Timeline dot */}
-                         <div className="absolute left-[-37px] md:left-[-29px] top-1.5 w-2.5 h-2.5 rounded-full bg-blue-600 ring-4 ring-blue-100 dark:ring-blue-900/40"></div>
-                         
-                         <h3 className="text-xl font-bold text-stone-900 dark:text-white">{exp.title}</h3>
-                         <div className="text-blue-700 dark:text-sky-400 font-semibold mb-1">{exp.company} <span className="text-stone-600 dark:text-slate-300 font-normal"> • {exp.location}</span></div>
-                         <div className="md:hidden text-stone-600 dark:text-slate-300 font-medium text-sm mb-4">
-                           {exp.period}
-                         </div>
-                         <p className="text-stone-700 dark:text-slate-300 mt-3 leading-relaxed">
-                           {exp.description}
-                         </p>
-                      </div>
-                   </div>
-                </div>
-              ))}
-            </div>
-          </FadeIn>
-        </section>
-
-        {/* Projects Section */}
-        <section id="projects" className="scroll-mt-32">
-           <FadeIn>
-            <div className="flex items-center gap-3 mb-8">
-              <ExternalLink className="w-6 h-6 text-blue-600 dark:text-sky-400" />
-              <h2 className="text-3xl font-bold text-stone-900 dark:text-white">Progetti in Evidenza</h2>
+            <div className="flex items-center gap-3 mb-6">
+              <div className="p-2 rounded-xl bg-blue-500/10 text-blue-600 dark:text-sky-400 border border-blue-500/20">
+                <User className="w-5 h-5" />
+              </div>
+              <div>
+                <h2 className="text-2xl font-bold text-slate-900 dark:text-white">{t.about.title}</h2>
+                <p className="text-xs font-mono text-slate-500 dark:text-slate-400">{t.about.subtitle}</p>
+              </div>
             </div>
             
-            <div className="grid grid-cols-1 gap-8">
-              {projects.map((project, idx) => (
-                <div key={idx} className="group bg-white dark:bg-slate-900/40 rounded-3xl border border-stone-200 dark:border-slate-800/60 shadow-sm overflow-hidden hover:shadow-md hover:border-blue-200 dark:hover:border-sky-500/30 transition-all duration-300">
-                  <div className="p-8">
-                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
-                      <div>
-                        <h3 className="text-2xl font-bold text-stone-900 dark:text-white flex items-center gap-3">
-                          {project.title}
-                          <div className="flex items-center gap-2">
-                            <a href={project.githubUrl || personalInfo.github} target="_blank" rel="noopener noreferrer" className="text-stone-500 dark:text-slate-400 hover:text-blue-700 dark:hover:text-sky-300 transition-colors" aria-label={`Codice sorgente di ${project.title}`}>
-                               <Github className="w-5 h-5" />
-                            </a>
-                            {project.demoUrl && (
-                              <a href={project.demoUrl} target="_blank" rel="noopener noreferrer" className="text-stone-500 dark:text-slate-400 hover:text-blue-700 dark:hover:text-sky-300 transition-colors" aria-label={`Sito live di ${project.title}`}>
-                                 <ExternalLink className="w-5 h-5" />
-                              </a>
-                            )}
-                          </div>
-                        </h3>
-                        <p className="text-blue-700 dark:text-sky-400 font-semibold">{project.subtitle}</p>
-                      </div>
-                      <span className="inline-flex items-center px-3 py-1 bg-stone-200/80 dark:bg-slate-800 text-stone-700 dark:text-slate-300 font-medium text-sm rounded-full whitespace-nowrap">
-                        {project.period}
-                      </span>
-                    </div>
-                    
-                    <p className="text-stone-700 dark:text-slate-300 leading-relaxed mb-6">
-                      {project.description}
+            <div className="bg-white dark:bg-slate-900/70 p-8 md:p-10 rounded-2xl border border-slate-200 dark:border-slate-800/80 shadow-xs relative overflow-hidden group hover:border-slate-300 dark:hover:border-slate-700 transition-all">
+              <div className="space-y-5 text-slate-700 dark:text-slate-300 text-base md:text-lg leading-relaxed">
+                {lang === 'it' ? (
+                  <>
+                    <p className="text-lg md:text-xl font-medium text-slate-900 dark:text-slate-100">
+                      Laureato in <span className="text-blue-600 dark:text-sky-400 font-bold">Informatica</span> presso Sapienza Università di Roma con una solida preparazione in <span className="text-slate-900 dark:text-white font-bold">algoritmi, strutture dati e programmazione parallela</span>.
                     </p>
                     
-                    <div className="flex flex-wrap gap-2 mt-auto">
-                      {project.tags.map((tag, i) => (
-                        <span key={i} className="px-3 py-1 bg-blue-50 dark:bg-sky-500/10 text-blue-700 dark:text-sky-300 text-xs font-semibold rounded-lg border border-blue-100 dark:border-sky-500/20">
-                          {tag}
+                    <p>
+                      Ho maturato esperienza pratica nello sviluppo di progetti accademici e di ricerca utilizzando <span className="font-semibold text-slate-900 dark:text-white">Java, C/C++ e Python</span>, dimostrando una forte attitudine al problem solving, alla programmazione ad oggetti (OOP), ai design pattern e alla progettazione software strutturata.
+                    </p>
+
+                    <p>
+                      Particolarmente orientato alla programmazione di sistema e all'High Performance Computing con <span className="font-semibold text-slate-900 dark:text-white">OpenMP, MPI, CUDA e HIP</span>, con costante attenzione all'ottimizzazione delle prestazioni, gestione efficiente della memoria, database relazionali e utilizzo dei tool avanzati di profiling e debugging in ambiente <span className="font-semibold text-slate-900 dark:text-white">Linux</span>.
+                    </p>
+                  </>
+                ) : (
+                  <>
+                    <p className="text-lg md:text-xl font-medium text-slate-900 dark:text-slate-100">
+                      Graduated in <span className="text-blue-600 dark:text-sky-400 font-bold">Computer Science</span> from Sapienza University of Rome with solid preparation in <span className="text-slate-900 dark:text-white font-bold">algorithms, data structures, and parallel computing</span>.
+                    </p>
+                    
+                    <p>
+                      I have gained hands-on experience developing academic and research projects in <span className="font-semibold text-slate-900 dark:text-white">Java, C/C++, and Python</span>, demonstrating a strong aptitude for analytical problem solving, object-oriented programming (OOP), design patterns, and structured software architecture.
+                    </p>
+
+                    <p>
+                      Specially focused on low-level systems and High Performance Computing using <span className="font-semibold text-slate-900 dark:text-white">OpenMP, MPI, CUDA, and HIP</span>, with constant emphasis on execution efficiency, rigorous memory management, relational databases, and advanced debugging/profiling toolchains in <span className="font-semibold text-slate-900 dark:text-white">Linux</span> environments.
+                    </p>
+                  </>
+                )}
+              </div>
+            </div>
+          </FadeIn>
+        </section>
+
+        {/* Skills Bento Grid (Layered Systems Architecture) */}
+        <section id="skills" className="scroll-mt-24">
+          <FadeIn>
+            <div className="flex items-center gap-3 mb-6">
+              <div className="p-2 rounded-xl bg-blue-500/10 text-blue-600 dark:text-sky-400 border border-blue-500/20">
+                <Cpu className="w-5 h-5" />
+              </div>
+              <div>
+                <h2 className="text-2xl font-bold text-slate-900 dark:text-white">{t.skills.title}</h2>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {t.skills.groups.map((skillGroup, idx) => {
+                let GroupIcon = Code2;
+                if (skillGroup.icon === 'cpu') GroupIcon = Cpu;
+                if (skillGroup.icon === 'layers') GroupIcon = Layers;
+                if (skillGroup.icon === 'terminal') GroupIcon = Terminal;
+                if (skillGroup.icon === 'globe') GroupIcon = Globe;
+
+                return (
+                  <div 
+                    key={idx} 
+                    className="bg-white dark:bg-slate-900/70 p-6 md:p-7 rounded-2xl border border-slate-200 dark:border-slate-800/80 shadow-xs hover:shadow-md hover:border-slate-300 dark:hover:border-slate-700 transition-all flex flex-col justify-between"
+                  >
+                    <div>
+                      <div className="flex items-center gap-3 mb-2">
+                        <div className="p-2 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300">
+                          <GroupIcon className="w-4 h-4" />
+                        </div>
+                        <div>
+                          <h3 className="text-lg font-bold text-slate-900 dark:text-white">{skillGroup.category}</h3>
+                        </div>
+                      </div>
+                      <p className="text-xs text-slate-600 dark:text-slate-400 mb-4">{skillGroup.description}</p>
+                    </div>
+
+                    <div className="flex flex-wrap gap-2 pt-2">
+                      {skillGroup.items.map((item, i) => (
+                        <span 
+                          key={i} 
+                          className={`px-3 py-1.5 text-xs font-mono font-medium rounded-lg border transition-colors duration-200 cursor-default ${getSkillBadgeStyle(item)}`}
+                        >
+                          {item}
                         </span>
                       ))}
                     </div>
                   </div>
+                );
+              })}
+            </div>
+          </FadeIn>
+        </section>
+
+        {/* Featured Projects Section */}
+        <section id="projects" className="scroll-mt-24">
+          <FadeIn>
+            <div className="flex items-center gap-3 mb-6">
+              <div className="p-2 rounded-xl bg-blue-500/10 text-blue-600 dark:text-sky-400 border border-blue-500/20">
+                <ExternalLink className="w-5 h-5" />
+              </div>
+              <div>
+                <h2 className="text-2xl font-bold text-slate-900 dark:text-white">{t.projects.title}</h2>
+                <p className="text-xs font-mono text-slate-500 dark:text-slate-400">{t.projects.subtitle}</p>
+              </div>
+            </div>
+            
+            <div className="grid grid-cols-1 gap-6">
+              {t.projects.items.map((project, idx) => (
+                <div 
+                  key={idx} 
+                  className="bg-white dark:bg-slate-900/70 rounded-2xl border border-slate-200 dark:border-slate-800/80 shadow-xs overflow-hidden hover:shadow-md hover:border-slate-300 dark:hover:border-slate-700 transition-all p-7 md:p-8 space-y-5"
+                >
+                  <div className="flex flex-col md:flex-row md:items-start justify-between gap-4">
+                    <div>
+                      <div className="flex items-center gap-3 flex-wrap">
+                        <h3 className="text-2xl font-bold text-slate-900 dark:text-white tracking-tight">
+                          {project.title}
+                        </h3>
+                        {project.highlights && project.highlights.map((h, i) => (
+                          <span key={i} className="px-2.5 py-0.5 rounded-full text-[11px] font-mono font-semibold bg-blue-500/10 text-blue-700 dark:text-sky-400 border border-blue-500/20">
+                            {h}
+                          </span>
+                        ))}
+                      </div>
+                      <p className="text-blue-700 dark:text-sky-400 font-semibold text-sm mt-1">{project.subtitle}</p>
+                    </div>
+
+                    <div className="flex items-center gap-2 shrink-0">
+                      <span className="inline-flex items-center px-3 py-1 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-mono text-xs font-medium rounded-lg">
+                        {project.period}
+                      </span>
+                    </div>
+                  </div>
+                  
+                  <p className="text-slate-700 dark:text-slate-300 text-base leading-relaxed">
+                    {project.description}
+                  </p>
+                  
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-3 border-t border-slate-100 dark:border-slate-800/60">
+                    <div className="flex flex-wrap gap-1.5">
+                      {project.tags.map((tag, i) => (
+                        <span key={i} className="px-2.5 py-1 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs font-mono rounded-md border border-slate-200 dark:border-slate-700/60">
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+
+                    <div className="flex items-center gap-3 shrink-0">
+                      {project.githubUrl && (
+                        <a 
+                          href={project.githubUrl} 
+                          target="_blank" 
+                          rel="noopener noreferrer" 
+                          className="flex items-center gap-1.5 px-4 py-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 text-xs font-semibold rounded-lg transition-colors"
+                          aria-label={`Codice sorgente di ${project.title}`}
+                        >
+                          <Github className="w-3.5 h-3.5" />
+                          {t.projects.viewCode}
+                        </a>
+                      )}
+                      {project.demoUrl && (
+                        <a 
+                          href={project.demoUrl} 
+                          target="_blank" 
+                          rel="noopener noreferrer" 
+                          className="flex items-center gap-1.5 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold rounded-lg shadow-xs transition-colors"
+                          aria-label={`Sito live di ${project.title}`}
+                        >
+                          <ExternalLink className="w-3.5 h-3.5" />
+                          {t.projects.viewDemo}
+                        </a>
+                      )}
+                    </div>
+                  </div>
                 </div>
               ))}
             </div>
-           </FadeIn>
+          </FadeIn>
+        </section>
+
+        {/* Experience & Research Section */}
+        <section id="experience" className="scroll-mt-24">
+          <FadeIn>
+            <div className="flex items-center gap-3 mb-6">
+              <div className="p-2 rounded-xl bg-blue-500/10 text-blue-600 dark:text-sky-400 border border-blue-500/20">
+                <Briefcase className="w-5 h-5" />
+              </div>
+              <div>
+                <h2 className="text-2xl font-bold text-slate-900 dark:text-white">{t.experience.title}</h2>
+                <p className="text-xs font-mono text-slate-500 dark:text-slate-400">{t.experience.subtitle}</p>
+              </div>
+            </div>
+
+            <div className="space-y-6">
+              {t.experience.items.map((exp, idx) => (
+                <div key={idx} className="relative pl-8 md:pl-0">
+                  <div className="md:grid md:grid-cols-4 gap-6 items-start">
+                    <div className="hidden md:block text-slate-600 dark:text-slate-400 font-mono text-xs pt-1.5">
+                      {exp.period}
+                    </div>
+                    <div className="md:col-span-3 relative pb-6 md:pb-0">
+                      {/* Timeline line */}
+                      <div className="absolute left-[-33px] md:left-[-25px] top-2 w-px h-full bg-slate-300 dark:bg-slate-800"></div>
+                      {/* Timeline dot */}
+                      <div className="absolute left-[-37px] md:left-[-29px] top-1.5 w-2.5 h-2.5 rounded-full bg-blue-600 ring-4 ring-blue-100 dark:ring-blue-900/40"></div>
+                      
+                      <div className="bg-white dark:bg-slate-900/70 p-6 rounded-2xl border border-slate-200 dark:border-slate-800/80 shadow-xs">
+                        <h3 className="text-xl font-bold text-slate-900 dark:text-white">{exp.title}</h3>
+                        <div className="text-blue-700 dark:text-sky-400 font-semibold text-sm mb-1">
+                          {exp.company} <span className="text-slate-500 dark:text-slate-400 font-normal"> · {exp.location}</span>
+                        </div>
+                        <div className="md:hidden text-slate-600 dark:text-slate-400 font-mono text-xs mb-3">
+                          {exp.period}
+                        </div>
+                        <p className="text-slate-700 dark:text-slate-300 mt-3 leading-relaxed text-sm md:text-base">
+                          {exp.description}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </FadeIn>
+        </section>
+
+        {/* Education & Certifications (Combined Grid) */}
+        <section id="education" className="scroll-mt-24">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            
+            {/* Education */}
+            <div className="lg:col-span-7">
+              <FadeIn>
+                <div className="flex items-center gap-3 mb-6">
+                  <div className="p-2 rounded-xl bg-blue-500/10 text-blue-600 dark:text-sky-400 border border-blue-500/20">
+                    <GraduationCap className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <h2 className="text-2xl font-bold text-slate-900 dark:text-white">{t.education.title}</h2>
+                    <p className="text-xs font-mono text-slate-500 dark:text-slate-400">{t.education.subtitle}</p>
+                  </div>
+                </div>
+
+                <div className="space-y-4">
+                  {t.education.items.map((edu, idx) => (
+                    <div key={idx} className="bg-white dark:bg-slate-900/70 p-6 rounded-2xl border border-slate-200 dark:border-slate-800/80 shadow-xs hover:shadow-md transition-shadow">
+                      <div className="flex items-start justify-between gap-2 mb-1">
+                        <h3 className="text-lg font-bold text-slate-900 dark:text-white">{edu.degree}</h3>
+                        <span className="px-2.5 py-0.5 rounded-full text-xs font-mono font-bold bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/20 shrink-0">
+                          {edu.grade}
+                        </span>
+                      </div>
+                      <div className="text-blue-700 dark:text-sky-400 font-semibold text-sm mb-2">{edu.institution}</div>
+                      <div className="text-xs font-mono text-slate-600 dark:text-slate-400">
+                        {edu.period} · {edu.location}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </FadeIn>
+            </div>
+
+            {/* Certifications */}
+            <div className="lg:col-span-5">
+              <FadeIn delay={0.15}>
+                <div className="flex items-center gap-3 mb-6">
+                  <div className="p-2 rounded-xl bg-blue-500/10 text-blue-600 dark:text-sky-400 border border-blue-500/20">
+                    <Award className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <h2 className="text-2xl font-bold text-slate-900 dark:text-white">{t.education.certificationsTitle}</h2>
+                    <p className="text-xs font-mono text-slate-500 dark:text-slate-400">Attestati e qualifiche</p>
+                  </div>
+                </div>
+
+                <div className="bg-white dark:bg-slate-900/70 p-6 rounded-2xl border border-slate-200 dark:border-slate-800/80 shadow-xs space-y-4">
+                  {t.education.certifications.map((cert, idx) => (
+                    <div key={idx} className="flex items-center gap-3 p-3 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800/80">
+                      <CheckCircle2 className="w-4 h-4 text-blue-600 dark:text-sky-400 shrink-0" />
+                      <span className="text-slate-800 dark:text-slate-200 text-sm font-medium">{cert}</span>
+                    </div>
+                  ))}
+                </div>
+              </FadeIn>
+            </div>
+
+          </div>
         </section>
 
         {/* GitHub Repositories Section */}
-        <section id="github" className="scroll-mt-32">
+        <section id="github" className="scroll-mt-24">
           <FadeIn>
-            <div className="flex items-center gap-3 mb-8">
-              <Github className="w-6 h-6 text-blue-600 dark:text-sky-400" />
-              <h2 className="text-3xl font-bold text-stone-900 dark:text-white">Open Source & GitHub</h2>
+            <div className="flex items-center gap-3 mb-6">
+              <div className="p-2 rounded-xl bg-blue-500/10 text-blue-600 dark:text-sky-400 border border-blue-500/20">
+                <Github className="w-5 h-5" />
+              </div>
+              <div>
+                <h2 className="text-2xl font-bold text-slate-900 dark:text-white">Open Source & Repository GitHub</h2>
+                <p className="text-xs font-mono text-slate-500 dark:text-slate-400">{lang === 'it' ? 'Codice pubblico, algoritmi e progetti' : 'Public code, algorithms and projects'}</p>
+              </div>
             </div>
 
             {isLoadingGithub ? (
@@ -485,20 +775,20 @@ export default function App() {
                 {[1, 2, 3, 4, 5].map((i) => (
                   <div 
                     key={i} 
-                    className="bg-white dark:bg-slate-900/40 p-6 rounded-2xl border border-stone-200 dark:border-slate-800/60 shadow-sm animate-pulse space-y-4"
+                    className="bg-white dark:bg-slate-900/70 p-6 rounded-2xl border border-slate-200 dark:border-slate-800/80 shadow-xs animate-pulse space-y-4"
                   >
                     <div className="flex items-center gap-2">
-                      <div className="w-4 h-4 bg-stone-200 dark:bg-slate-800 rounded"></div>
-                      <div className="h-5 w-36 bg-stone-200 dark:bg-slate-800 rounded-md"></div>
+                      <div className="w-4 h-4 bg-slate-200 dark:bg-slate-800 rounded"></div>
+                      <div className="h-5 w-36 bg-slate-200 dark:bg-slate-800 rounded-md"></div>
                     </div>
                     <div className="space-y-2">
-                      <div className="h-4 w-full bg-stone-200 dark:bg-slate-800 rounded"></div>
-                      <div className="h-4 w-3/4 bg-stone-200 dark:bg-slate-800 rounded"></div>
+                      <div className="h-4 w-full bg-slate-200 dark:bg-slate-800 rounded"></div>
+                      <div className="h-4 w-3/4 bg-slate-200 dark:bg-slate-800 rounded"></div>
                     </div>
                     <div className="flex items-center gap-4 pt-2">
-                      <div className="h-3.5 w-16 bg-stone-200 dark:bg-slate-800 rounded"></div>
-                      <div className="h-3.5 w-10 bg-stone-200 dark:bg-slate-800 rounded"></div>
-                      <div className="h-3.5 w-10 bg-stone-200 dark:bg-slate-800 rounded"></div>
+                      <div className="h-3.5 w-16 bg-slate-200 dark:bg-slate-800 rounded"></div>
+                      <div className="h-3.5 w-10 bg-slate-200 dark:bg-slate-800 rounded"></div>
+                      <div className="h-3.5 w-10 bg-slate-200 dark:bg-slate-800 rounded"></div>
                     </div>
                   </div>
                 ))}
@@ -511,33 +801,34 @@ export default function App() {
                     href={repo.html_url} 
                     target="_blank" 
                     rel="noopener noreferrer"
-                    className="block bg-white dark:bg-slate-900/40 p-6 rounded-2xl border border-stone-200 dark:border-slate-800/60 shadow-sm hover:shadow-md hover:border-blue-300 dark:hover:border-sky-500/50 transition-all group"
+                    className="block bg-white dark:bg-slate-900/70 p-6 rounded-2xl border border-slate-200 dark:border-slate-800/80 shadow-xs hover:shadow-md hover:border-blue-400 dark:hover:border-sky-500/50 transition-all group"
                   >
-                    <div className="flex items-start justify-between gap-4 mb-3">
-                      <h3 className="text-lg font-bold text-stone-900 dark:text-white group-hover:text-blue-700 dark:hover:text-sky-400 transition-colors flex items-center gap-2">
-                        <BookOpen className="w-4 h-4 text-stone-500 dark:text-slate-400 group-hover:text-blue-600 dark:text-sky-400" />
+                    <div className="flex items-start justify-between gap-4 mb-2.5">
+                      <h3 className="text-lg font-bold text-slate-900 dark:text-white group-hover:text-blue-700 dark:group-hover:text-sky-400 transition-colors flex items-center gap-2">
+                        <BookOpen className="w-4 h-4 text-slate-500 dark:text-slate-400 group-hover:text-blue-600 dark:group-hover:text-sky-400" />
                         {repo.name}
                       </h3>
+                      <ExternalLink className="w-3.5 h-3.5 text-slate-400 opacity-0 group-hover:opacity-100 transition-opacity" />
                     </div>
                     
-                    <p className="text-stone-700 dark:text-slate-300 text-sm mb-6 line-clamp-2 min-h-[2.5rem]">
-                      {repo.description || "Nessuna descrizione disponibile per questo repository."}
+                    <p className="text-slate-700 dark:text-slate-300 text-sm mb-5 line-clamp-2 min-h-[2.5rem] leading-relaxed">
+                      {repo.description || (lang === 'it' ? "Nessuna descrizione disponibile per questo repository." : "No description available for this repository.")}
                     </p>
                     
-                    <div className="flex items-center gap-4 text-xs font-semibold text-stone-700 dark:text-slate-300 mt-auto">
+                    <div className="flex items-center gap-4 text-xs font-mono font-medium text-slate-700 dark:text-slate-300 mt-auto pt-3 border-t border-slate-100 dark:border-slate-800/50">
                       {repo.language && (
                         <div className="flex items-center gap-1.5">
                           <span className="w-2.5 h-2.5 rounded-full bg-blue-600 dark:bg-sky-400"></span>
-                          {repo.language}
+                          <span>{repo.language}</span>
                         </div>
                       )}
                       <div className="flex items-center gap-1">
                         <Star className="w-3.5 h-3.5" />
-                        {repo.stargazers_count}
+                        <span>{repo.stargazers_count}</span>
                       </div>
                       <div className="flex items-center gap-1">
                         <GitFork className="w-3.5 h-3.5" />
-                        {repo.forks_count}
+                        <span>{repo.forks_count}</span>
                       </div>
                     </div>
                   </a>
@@ -550,10 +841,12 @@ export default function App() {
                 <a 
                   href={personalInfo.github} 
                   target="_blank" 
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 px-6 py-3 bg-stone-900 dark:bg-slate-800 hover:bg-stone-800 dark:hover:bg-slate-700 text-white font-medium rounded-full transition-colors shadow-sm hover:shadow"
+                  rel="noopener noreferrer" 
+                  className="inline-flex items-center gap-2 px-6 py-3 bg-slate-900 dark:bg-slate-800 hover:bg-slate-800 dark:hover:bg-slate-700 text-white font-medium text-sm rounded-xl transition-colors shadow-xs hover:shadow"
                 >
-                  Vedi tutti i {githubProfile.public_repos} repository su GitHub
+                  {lang === 'it' 
+                    ? `Visualizza tutti i ${githubProfile.public_repos} repository su GitHub`
+                    : `View all ${githubProfile.public_repos} repositories on GitHub`}
                   <ExternalLink className="w-4 h-4" />
                 </a>
               </div>
@@ -563,65 +856,66 @@ export default function App() {
 
       </main>
 
-      <footer className="border-t border-stone-200 dark:border-slate-800/60 bg-stone-100 dark:bg-slate-900/60 mt-12 py-8">
-        <div className="max-w-5xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-4 text-sm font-medium text-stone-700 dark:text-slate-300">
-          <p>© {new Date().getFullYear()} Valerio Cola. Tutti i diritti riservati.</p>
+      {/* Footer (Accessibility and High Contrast compliant) */}
+      <footer className="border-t border-slate-200 dark:border-slate-800/80 bg-slate-100 dark:bg-slate-900/60 mt-16 py-8 relative z-10">
+        <div className="max-w-6xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-4 text-sm font-medium text-slate-700 dark:text-slate-300">
+          <p>© {new Date().getFullYear()} Valerio Cola. {t.footer.allRightsReserved}</p>
           <div className="flex gap-6 items-center">
             <button 
               onClick={() => setShowPrivacyModal(true)} 
-              className="text-stone-700 dark:text-slate-300 hover:text-blue-700 dark:hover:text-sky-300 transition-colors flex items-center gap-1.5 cursor-pointer"
+              className="text-slate-700 dark:text-slate-300 hover:text-blue-700 dark:hover:text-sky-300 transition-colors flex items-center gap-1.5 cursor-pointer"
             >
               <ShieldCheck className="w-4 h-4 text-blue-700 dark:text-sky-400" />
-              Privacy & Cookie Policy
+              {t.footer.privacyPolicy}
             </button>
-            <a href={personalInfo.github} aria-label="Profilo GitHub" target="_blank" rel="noopener noreferrer" className="text-stone-700 dark:text-slate-300 hover:text-blue-700 dark:hover:text-sky-300 transition-colors">GitHub</a>
-            <button onClick={() => setShowContactModal(true)} aria-label="Contatto Email" className="text-stone-700 dark:text-slate-300 hover:text-blue-700 dark:hover:text-sky-300 transition-colors cursor-pointer">Contatti</button>
+            <a href={personalInfo.github} aria-label="Profilo GitHub" target="_blank" rel="noopener noreferrer" className="text-slate-700 dark:text-slate-300 hover:text-blue-700 dark:hover:text-sky-300 transition-colors">GitHub</a>
+            <button onClick={() => setShowContactModal(true)} aria-label="Contatto Email" className="text-slate-700 dark:text-slate-300 hover:text-blue-700 dark:hover:text-sky-300 transition-colors cursor-pointer">{t.nav.contact}</button>
           </div>
         </div>
       </footer>
 
       {/* Contact Modal */}
       {showContactModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-stone-900/60 dark:bg-black/70 backdrop-blur-sm animate-fade-in">
-          <div className="bg-white dark:bg-slate-900 border border-stone-200 dark:border-slate-800 rounded-2xl max-w-md w-full p-6 shadow-2xl relative space-y-5 text-stone-800 dark:text-slate-200">
-            <div className="flex items-center justify-between pb-3 border-b border-stone-100 dark:border-slate-800">
-              <div className="flex items-center gap-2 font-bold text-lg text-stone-900 dark:text-white">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 dark:bg-black/75 backdrop-blur-sm animate-fade-in">
+          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl max-w-md w-full p-6 shadow-2xl relative space-y-5 text-slate-800 dark:text-slate-200">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
+              <div className="flex items-center gap-2 font-bold text-lg text-slate-900 dark:text-white">
                 <Mail className="w-5 h-5 text-blue-600 dark:text-sky-400" />
-                Contattami
+                {t.contactModal.title}
               </div>
               <button 
                 onClick={() => setShowContactModal(false)}
-                className="p-1.5 rounded-full hover:bg-stone-100 dark:hover:bg-slate-800 text-stone-600 dark:text-slate-400 transition-colors cursor-pointer"
-                aria-label="Chiudi"
+                className="p-1.5 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400 transition-colors cursor-pointer"
+                aria-label={t.contactModal.close}
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
-            <p className="text-sm text-stone-700 dark:text-slate-300">
-              Scegli la modalità che preferisci per metterti in contatto con me:
+            <p className="text-sm text-slate-700 dark:text-slate-300">
+              {t.contactModal.subtitle}
             </p>
 
             {/* Email Box with Copy */}
-            <div className="p-4 bg-stone-50 dark:bg-slate-950 rounded-xl border border-stone-200 dark:border-slate-800/80 space-y-3">
-              <div className="text-xs font-semibold uppercase tracking-wider text-stone-600 dark:text-slate-300">Indirizzo Email</div>
+            <div className="p-4 bg-slate-50 dark:bg-slate-950 rounded-xl border border-slate-200 dark:border-slate-800 space-y-3">
+              <div className="text-xs font-semibold uppercase tracking-wider text-slate-600 dark:text-slate-300">{t.contactModal.emailLabel}</div>
               <div className="flex items-center justify-between gap-3">
-                <span className="font-mono text-sm md:text-base font-bold text-stone-900 dark:text-white truncate">
+                <span className="font-mono text-sm md:text-base font-bold text-slate-900 dark:text-white truncate">
                   {personalInfo.email}
                 </span>
                 <button
                   onClick={handleCopyEmail}
-                  className="flex items-center gap-1.5 px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium rounded-lg transition-colors shadow-sm shrink-0 cursor-pointer"
+                  className="flex items-center gap-1.5 px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium rounded-lg transition-colors shadow-xs shrink-0 cursor-pointer"
                 >
                   {copiedEmail ? (
                     <>
                       <Check className="w-3.5 h-3.5 text-emerald-300" />
-                      Copiato!
+                      {t.contactModal.copied}
                     </>
                   ) : (
                     <>
                       <Copy className="w-3.5 h-3.5" />
-                      Copia
+                      {t.contactModal.copy}
                     </>
                   )}
                 </button>
@@ -634,35 +928,35 @@ export default function App() {
                 href={`https://mail.google.com/mail/?view=cm&fs=1&to=${personalInfo.email}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center justify-center gap-2 p-3 bg-red-600 hover:bg-red-700 text-white text-sm font-medium rounded-xl transition-colors shadow-sm"
+                className="flex items-center justify-center gap-2 p-3 bg-red-600 hover:bg-red-700 text-white text-sm font-medium rounded-xl transition-colors shadow-xs"
               >
                 <Mail className="w-4 h-4" />
-                Apri in Gmail Web (Desktop / PC)
+                {lang === 'it' ? 'Apri in Gmail Web (Desktop / PC)' : 'Open in Gmail Web (Desktop / PC)'}
               </a>
 
               <a
                 href={`mailto:${personalInfo.email}`}
-                className="flex items-center justify-center gap-2 p-3 bg-stone-100 dark:bg-slate-800 hover:bg-stone-200 dark:hover:bg-slate-700 text-stone-800 dark:text-slate-200 text-sm font-medium rounded-xl transition-colors"
+                className="flex items-center justify-center gap-2 p-3 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 text-sm font-medium rounded-xl transition-colors"
               >
                 <ExternalLink className="w-4 h-4" />
-                Apri Client Email Predefinito (Mobile)
+                {lang === 'it' ? 'Apri Client Email Predefinito (Mobile)' : 'Open Default Email App (Mobile)'}
               </a>
             </div>
 
             {/* Location */}
-            <div className="pt-3 border-t border-stone-100 dark:border-slate-800 space-y-2.5 text-sm">
-              <div className="flex items-center gap-2 text-stone-600 dark:text-slate-300 text-xs">
-                <MapPin className="w-4 h-4 text-stone-500 dark:text-slate-400" />
-                <span>{personalInfo.location}</span>
+            <div className="pt-3 border-t border-slate-100 dark:border-slate-800 space-y-2.5 text-sm">
+              <div className="flex items-center gap-2 text-slate-600 dark:text-slate-300 text-xs">
+                <MapPin className="w-4 h-4 text-slate-500 dark:text-slate-400" />
+                <span>{lang === 'it' ? personalInfo.location : 'Rome, Italy'}</span>
               </div>
             </div>
 
             <div className="pt-2 flex justify-end">
               <button
                 onClick={() => setShowContactModal(false)}
-                className="px-5 py-2 bg-stone-200 dark:bg-slate-800 hover:bg-stone-300 dark:hover:bg-slate-700 text-stone-800 dark:text-slate-200 text-sm font-medium rounded-xl transition-colors cursor-pointer"
+                className="px-5 py-2 bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 text-sm font-medium rounded-xl transition-colors cursor-pointer"
               >
-                Chiudi
+                {t.contactModal.close}
               </button>
             </div>
           </div>
@@ -671,45 +965,37 @@ export default function App() {
 
       {/* Privacy Policy Modal */}
       {showPrivacyModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-stone-900/60 dark:bg-black/70 backdrop-blur-sm animate-fade-in">
-          <div className="bg-white dark:bg-slate-900 border border-stone-200 dark:border-slate-800 rounded-2xl max-w-lg w-full p-6 shadow-2xl relative space-y-4 text-stone-800 dark:text-slate-200">
-            <div className="flex items-center justify-between pb-3 border-b border-stone-100 dark:border-slate-800">
-              <div className="flex items-center gap-2 font-bold text-lg text-stone-900 dark:text-white">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 dark:bg-black/75 backdrop-blur-sm animate-fade-in">
+          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl max-w-lg w-full p-6 shadow-2xl relative space-y-4 text-slate-800 dark:text-slate-200">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
+              <div className="flex items-center gap-2 font-bold text-lg text-slate-900 dark:text-white">
                 <ShieldCheck className="w-5 h-5 text-blue-600 dark:text-sky-400" />
-                Privacy & Cookie Policy
+                {t.privacyModal.title}
               </div>
               <button 
                 onClick={() => setShowPrivacyModal(false)}
-                className="p-1.5 rounded-full hover:bg-stone-100 dark:hover:bg-slate-800 text-stone-600 dark:text-slate-400 transition-colors"
-                aria-label="Chiudi"
+                className="p-1.5 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400 transition-colors"
+                aria-label={t.privacyModal.close}
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
             
-            <div className="space-y-3 text-sm leading-relaxed text-stone-700 dark:text-slate-300">
-              <p>
-                <strong>Informativa sulla Privacy e sui Cookie (GDPR):</strong>
-              </p>
-              <p>
-                Questo sito web è un portfolio personale a scopo informativo e non commerciale.
-              </p>
-              <ul className="list-disc pl-5 space-y-1.5 text-stone-700 dark:text-slate-300">
-                <li><strong>Nessun Cookie di Tracciamento:</strong> Non vengono utilizzati cookie di profilazione, tracciamento o analitici di terze parti (es. Google Analytics).</li>
-                <li><strong>Assenza di Dati Personali Raccoglibili:</strong> Il sito non raccoglie nè memorizza dati personali tramite form o database.</li>
-                <li><strong>Contatti:</strong> Se invii un'email all'indirizzo indicato, i tuoi dati saranno trattati solo ed esclusivamente per rispondere alla richiesta.</li>
-              </ul>
-              <p className="text-xs text-stone-600 dark:text-slate-400 pt-2 border-t border-stone-100 dark:border-slate-800/80">
-                In conformità con il Regolamento UE 2016/679 (GDPR) e le direttive ePrivacy.
-              </p>
+            <div className="space-y-3 text-sm leading-relaxed text-slate-700 dark:text-slate-300">
+              {t.privacyModal.sections.map((sec, idx) => (
+                <div key={idx}>
+                  <p className="font-semibold text-slate-900 dark:text-white">{sec.title}</p>
+                  <p className="text-xs text-slate-600 dark:text-slate-400 mt-0.5">{sec.content}</p>
+                </div>
+              ))}
             </div>
 
             <div className="pt-2 flex justify-end">
               <button
                 onClick={() => setShowPrivacyModal(false)}
-                className="px-5 py-2 bg-stone-900 hover:bg-stone-800 dark:bg-slate-800 dark:hover:bg-slate-700 text-white text-sm font-medium rounded-xl transition-colors shadow-sm"
+                className="px-5 py-2 bg-slate-900 hover:bg-slate-800 dark:bg-slate-800 dark:hover:bg-slate-700 text-white text-sm font-medium rounded-xl transition-colors shadow-xs"
               >
-                Ho capito
+                {t.privacyModal.close}
               </button>
             </div>
           </div>
@@ -718,4 +1004,5 @@ export default function App() {
     </div>
   );
 }
+
 
