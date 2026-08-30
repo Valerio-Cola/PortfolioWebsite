@@ -36,6 +36,7 @@ import {
 } from 'lucide-react';
 import { personalInfo } from './data';
 import { translations, Language } from './i18n';
+import { LinkedInBadge } from './components/LinkedInBadge';
 
 const XIcon = ({ className }: { className?: string }) => (
   <svg viewBox="0 0 24 24" fill="currentColor" className={className} aria-hidden="true">
@@ -204,10 +205,10 @@ export default function App() {
 
           <nav className="hidden md:flex items-center gap-1 text-sm font-medium text-slate-700 dark:text-slate-300">
             <a href="#about" className="px-3 py-1.5 rounded-lg hover:text-blue-600 dark:hover:text-sky-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 transition-all">{t.nav.about}</a>
+            <a href="#education" className="px-3 py-1.5 rounded-lg hover:text-blue-600 dark:hover:text-sky-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 transition-all">{t.nav.education}</a>
+            <a href="#experience" className="px-3 py-1.5 rounded-lg hover:text-blue-600 dark:hover:text-sky-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 transition-all">{t.nav.experience}</a>
             <a href="#skills" className="px-3 py-1.5 rounded-lg hover:text-blue-600 dark:hover:text-sky-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 transition-all">{t.nav.skills}</a>
             <a href="#projects" className="px-3 py-1.5 rounded-lg hover:text-blue-600 dark:hover:text-sky-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 transition-all">{t.nav.projects}</a>
-            <a href="#experience" className="px-3 py-1.5 rounded-lg hover:text-blue-600 dark:hover:text-sky-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 transition-all">{t.nav.experience}</a>
-            <a href="#education" className="px-3 py-1.5 rounded-lg hover:text-blue-600 dark:hover:text-sky-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 transition-all">{t.nav.education}</a>
             <a href="#github" className="px-3 py-1.5 rounded-lg hover:text-blue-600 dark:hover:text-sky-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 transition-all">GitHub</a>
             
             <div className="w-px h-5 bg-slate-200 dark:bg-slate-800 mx-2"></div>
@@ -355,30 +356,42 @@ export default function App() {
                 </a>
               </div>
 
-              {/* Social Pills */}
-              {personalInfo.socials && personalInfo.socials.length > 0 && (
-                <div className="flex flex-wrap items-center gap-2 pt-1">
-                  <span className="text-xs font-mono text-slate-500 dark:text-slate-400 mr-1">Social:</span>
-                  {personalInfo.socials.map((social, idx) => {
-                    let Icon: any = Github;
-                    if (social.name === "LinkedIn") Icon = Linkedin;
-                    if (social.name === "X") Icon = XIcon;
-                    
-                    return (
-                      <a 
-                        key={idx}
-                        href={social.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center gap-1.5 px-3 py-1 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-sky-400 text-xs font-medium rounded-lg border border-slate-200 dark:border-slate-800 hover:border-slate-400 transition-all shadow-xs"
-                      >
-                        <Icon className="w-3.5 h-3.5" />
-                        {social.handle}
-                      </a>
-                    );
-                  })}
+              {/* Social Pills & LinkedIn Profile Badge */}
+              <div className="pt-1 space-y-3">
+                {personalInfo.socials && personalInfo.socials.length > 0 && (
+                  <div className="flex flex-wrap items-center gap-2">
+                    <span className="text-xs font-mono text-slate-500 dark:text-slate-400 mr-1">Social:</span>
+                    {personalInfo.socials.map((social, idx) => {
+                      let Icon: any = Github;
+                      if (social.name === "LinkedIn") Icon = Linkedin;
+                      if (social.name === "X") Icon = XIcon;
+                      
+                      return (
+                        <a 
+                          key={idx}
+                          href={social.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center gap-1.5 px-3 py-1 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-sky-400 text-xs font-medium rounded-lg border border-slate-200 dark:border-slate-800 hover:border-slate-400 transition-all shadow-xs"
+                        >
+                          <Icon className="w-3.5 h-3.5" />
+                          {social.handle}
+                        </a>
+                      );
+                    })}
+                  </div>
+                )}
+
+                {/* LinkedIn Badge (Rendered directly under Social) */}
+                <div className="pt-1">
+                  <LinkedInBadge 
+                    isDarkMode={isDarkMode} 
+                    lang={lang} 
+                    size="large"
+                    vanity="valerio-cola"
+                  />
                 </div>
-              )}
+              </div>
             </div>
 
             {/* Right Col: Interactive Systems Console / Spec Box */}
@@ -503,6 +516,115 @@ export default function App() {
                   </>
                 )}
               </div>
+            </div>
+          </FadeIn>
+        </section>
+
+        {/* Education & Certifications (Combined Grid) */}
+        <section id="education" className="scroll-mt-24">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            
+            {/* Education */}
+            <div className="lg:col-span-7">
+              <FadeIn>
+                <div className="flex items-center gap-3 mb-6">
+                  <div className="p-2 rounded-xl bg-blue-500/10 text-blue-600 dark:text-sky-400 border border-blue-500/20">
+                    <GraduationCap className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <h2 className="text-2xl font-bold text-slate-900 dark:text-white">{t.education.title}</h2>
+                    <p className="text-xs font-mono text-slate-500 dark:text-slate-400">{t.education.subtitle}</p>
+                  </div>
+                </div>
+
+                <div className="space-y-4">
+                  {t.education.items.map((edu, idx) => (
+                    <div key={idx} className="bg-white dark:bg-slate-900/70 p-6 rounded-2xl border border-slate-200 dark:border-slate-800/80 shadow-xs hover:shadow-md transition-shadow">
+                      <div className="flex items-start justify-between gap-2 mb-1">
+                        <h3 className="text-lg font-bold text-slate-900 dark:text-white">{edu.degree}</h3>
+                        <span className="px-2.5 py-0.5 rounded-full text-xs font-mono font-bold bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/20 shrink-0">
+                          {edu.grade}
+                        </span>
+                      </div>
+                      <div className="text-blue-700 dark:text-sky-400 font-semibold text-sm mb-2">{edu.institution}</div>
+                      <div className="text-xs font-mono text-slate-600 dark:text-slate-400">
+                        {edu.period} · {edu.location}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </FadeIn>
+            </div>
+
+            {/* Certifications */}
+            <div className="lg:col-span-5">
+              <FadeIn delay={0.15}>
+                <div className="flex items-center gap-3 mb-6">
+                  <div className="p-2 rounded-xl bg-blue-500/10 text-blue-600 dark:text-sky-400 border border-blue-500/20">
+                    <Award className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <h2 className="text-2xl font-bold text-slate-900 dark:text-white">{t.education.certificationsTitle}</h2>
+                    <p className="text-xs font-mono text-slate-500 dark:text-slate-400">Attestati e qualifiche</p>
+                  </div>
+                </div>
+
+                <div className="bg-white dark:bg-slate-900/70 p-6 rounded-2xl border border-slate-200 dark:border-slate-800/80 shadow-xs space-y-4">
+                  {t.education.certifications.map((cert, idx) => (
+                    <div key={idx} className="flex items-center gap-3 p-3 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800/80">
+                      <CheckCircle2 className="w-4 h-4 text-blue-600 dark:text-sky-400 shrink-0" />
+                      <span className="text-slate-800 dark:text-slate-200 text-sm font-medium">{cert}</span>
+                    </div>
+                  ))}
+                </div>
+              </FadeIn>
+            </div>
+
+          </div>
+        </section>
+
+        {/* Experience & Research Section */}
+        <section id="experience" className="scroll-mt-24">
+          <FadeIn>
+            <div className="flex items-center gap-3 mb-6">
+              <div className="p-2 rounded-xl bg-blue-500/10 text-blue-600 dark:text-sky-400 border border-blue-500/20">
+                <Briefcase className="w-5 h-5" />
+              </div>
+              <div>
+                <h2 className="text-2xl font-bold text-slate-900 dark:text-white">{t.experience.title}</h2>
+                <p className="text-xs font-mono text-slate-500 dark:text-slate-400">{t.experience.subtitle}</p>
+              </div>
+            </div>
+
+            <div className="space-y-6">
+              {t.experience.items.map((exp, idx) => (
+                <div key={idx} className="relative pl-8 md:pl-0">
+                  <div className="md:grid md:grid-cols-4 gap-6 items-start">
+                    <div className="hidden md:block text-slate-600 dark:text-slate-400 font-mono text-xs pt-1.5">
+                      {exp.period}
+                    </div>
+                    <div className="md:col-span-3 relative pb-6 md:pb-0">
+                      {/* Timeline line */}
+                      <div className="absolute left-[-33px] md:left-[-25px] top-2 w-px h-full bg-slate-300 dark:bg-slate-800"></div>
+                      {/* Timeline dot */}
+                      <div className="absolute left-[-37px] md:left-[-29px] top-1.5 w-2.5 h-2.5 rounded-full bg-blue-600 ring-4 ring-blue-100 dark:ring-blue-900/40"></div>
+                      
+                      <div className="bg-white dark:bg-slate-900/70 p-6 rounded-2xl border border-slate-200 dark:border-slate-800/80 shadow-xs">
+                        <h3 className="text-xl font-bold text-slate-900 dark:text-white">{exp.title}</h3>
+                        <div className="text-blue-700 dark:text-sky-400 font-semibold text-sm mb-1">
+                          {exp.company} <span className="text-slate-500 dark:text-slate-400 font-normal"> · {exp.location}</span>
+                        </div>
+                        <div className="md:hidden text-slate-600 dark:text-slate-400 font-mono text-xs mb-3">
+                          {exp.period}
+                        </div>
+                        <p className="text-slate-700 dark:text-slate-300 mt-3 leading-relaxed text-sm md:text-base">
+                          {exp.description}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
             </div>
           </FadeIn>
         </section>
@@ -646,115 +768,6 @@ export default function App() {
               ))}
             </div>
           </FadeIn>
-        </section>
-
-        {/* Experience & Research Section */}
-        <section id="experience" className="scroll-mt-24">
-          <FadeIn>
-            <div className="flex items-center gap-3 mb-6">
-              <div className="p-2 rounded-xl bg-blue-500/10 text-blue-600 dark:text-sky-400 border border-blue-500/20">
-                <Briefcase className="w-5 h-5" />
-              </div>
-              <div>
-                <h2 className="text-2xl font-bold text-slate-900 dark:text-white">{t.experience.title}</h2>
-                <p className="text-xs font-mono text-slate-500 dark:text-slate-400">{t.experience.subtitle}</p>
-              </div>
-            </div>
-
-            <div className="space-y-6">
-              {t.experience.items.map((exp, idx) => (
-                <div key={idx} className="relative pl-8 md:pl-0">
-                  <div className="md:grid md:grid-cols-4 gap-6 items-start">
-                    <div className="hidden md:block text-slate-600 dark:text-slate-400 font-mono text-xs pt-1.5">
-                      {exp.period}
-                    </div>
-                    <div className="md:col-span-3 relative pb-6 md:pb-0">
-                      {/* Timeline line */}
-                      <div className="absolute left-[-33px] md:left-[-25px] top-2 w-px h-full bg-slate-300 dark:bg-slate-800"></div>
-                      {/* Timeline dot */}
-                      <div className="absolute left-[-37px] md:left-[-29px] top-1.5 w-2.5 h-2.5 rounded-full bg-blue-600 ring-4 ring-blue-100 dark:ring-blue-900/40"></div>
-                      
-                      <div className="bg-white dark:bg-slate-900/70 p-6 rounded-2xl border border-slate-200 dark:border-slate-800/80 shadow-xs">
-                        <h3 className="text-xl font-bold text-slate-900 dark:text-white">{exp.title}</h3>
-                        <div className="text-blue-700 dark:text-sky-400 font-semibold text-sm mb-1">
-                          {exp.company} <span className="text-slate-500 dark:text-slate-400 font-normal"> · {exp.location}</span>
-                        </div>
-                        <div className="md:hidden text-slate-600 dark:text-slate-400 font-mono text-xs mb-3">
-                          {exp.period}
-                        </div>
-                        <p className="text-slate-700 dark:text-slate-300 mt-3 leading-relaxed text-sm md:text-base">
-                          {exp.description}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </FadeIn>
-        </section>
-
-        {/* Education & Certifications (Combined Grid) */}
-        <section id="education" className="scroll-mt-24">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-            
-            {/* Education */}
-            <div className="lg:col-span-7">
-              <FadeIn>
-                <div className="flex items-center gap-3 mb-6">
-                  <div className="p-2 rounded-xl bg-blue-500/10 text-blue-600 dark:text-sky-400 border border-blue-500/20">
-                    <GraduationCap className="w-5 h-5" />
-                  </div>
-                  <div>
-                    <h2 className="text-2xl font-bold text-slate-900 dark:text-white">{t.education.title}</h2>
-                    <p className="text-xs font-mono text-slate-500 dark:text-slate-400">{t.education.subtitle}</p>
-                  </div>
-                </div>
-
-                <div className="space-y-4">
-                  {t.education.items.map((edu, idx) => (
-                    <div key={idx} className="bg-white dark:bg-slate-900/70 p-6 rounded-2xl border border-slate-200 dark:border-slate-800/80 shadow-xs hover:shadow-md transition-shadow">
-                      <div className="flex items-start justify-between gap-2 mb-1">
-                        <h3 className="text-lg font-bold text-slate-900 dark:text-white">{edu.degree}</h3>
-                        <span className="px-2.5 py-0.5 rounded-full text-xs font-mono font-bold bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/20 shrink-0">
-                          {edu.grade}
-                        </span>
-                      </div>
-                      <div className="text-blue-700 dark:text-sky-400 font-semibold text-sm mb-2">{edu.institution}</div>
-                      <div className="text-xs font-mono text-slate-600 dark:text-slate-400">
-                        {edu.period} · {edu.location}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </FadeIn>
-            </div>
-
-            {/* Certifications */}
-            <div className="lg:col-span-5">
-              <FadeIn delay={0.15}>
-                <div className="flex items-center gap-3 mb-6">
-                  <div className="p-2 rounded-xl bg-blue-500/10 text-blue-600 dark:text-sky-400 border border-blue-500/20">
-                    <Award className="w-5 h-5" />
-                  </div>
-                  <div>
-                    <h2 className="text-2xl font-bold text-slate-900 dark:text-white">{t.education.certificationsTitle}</h2>
-                    <p className="text-xs font-mono text-slate-500 dark:text-slate-400">Attestati e qualifiche</p>
-                  </div>
-                </div>
-
-                <div className="bg-white dark:bg-slate-900/70 p-6 rounded-2xl border border-slate-200 dark:border-slate-800/80 shadow-xs space-y-4">
-                  {t.education.certifications.map((cert, idx) => (
-                    <div key={idx} className="flex items-center gap-3 p-3 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800/80">
-                      <CheckCircle2 className="w-4 h-4 text-blue-600 dark:text-sky-400 shrink-0" />
-                      <span className="text-slate-800 dark:text-slate-200 text-sm font-medium">{cert}</span>
-                    </div>
-                  ))}
-                </div>
-              </FadeIn>
-            </div>
-
-          </div>
         </section>
 
         {/* GitHub Repositories Section */}
@@ -940,6 +953,16 @@ export default function App() {
               >
                 <ExternalLink className="w-4 h-4" />
                 {lang === 'it' ? 'Apri Client Email Predefinito (Mobile)' : 'Open Default Email App (Mobile)'}
+              </a>
+
+              <a
+                href={`https://www.linkedin.com/in/valerio-cola`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-center gap-2 p-3 bg-[#0a66c2] hover:bg-[#004182] text-white text-sm font-medium rounded-xl transition-colors shadow-xs"
+              >
+                <Linkedin className="w-4 h-4" />
+                {lang === 'it' ? 'Collegati su LinkedIn' : 'Connect on LinkedIn'}
               </a>
             </div>
 

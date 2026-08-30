@@ -163,7 +163,7 @@ export const translations: Record<Language, TranslationData> = {
       copy: "Copia"
     },
     about: {
-      title: "Profilo & Visione Tecnica",
+      title: "Profilo",
       subtitle: "Background accademico",
       text: "Laureato in Informatica presso Sapienza Università di Roma con una solida preparazione in algoritmi, strutture dati e programmazione parallela. Ho maturato esperienza pratica nello sviluppo di progetti accademici utilizzando Java, C/C++ e Python, dimostrando una forte attitudine al problem solving, alla programmazione ad oggetti (OOP) e alla progettazione software.",
       keyValuesTitle: "Aree di Competenza & Approccio",
@@ -239,13 +239,13 @@ export const translations: Record<Language, TranslationData> = {
           highlights: ["Live Application", "Cloudflare Workers", "Analytics"]
         },
         {
-          title: "HPC Trace-Driven Simulator",
-          subtitle: "Simulatore di Proxy Applications per Architetture Multicore",
+          title: "GRIT - HPC Trace-Driven Simulator",
+          subtitle: "Convertitore di Tracce GOAL in Proxy Application MPI per Sistemi HPC",
           period: "02/2026 – 05/2026",
-          description: "Progetto di ricerca sviluppato nel Lab HPC della Sapienza sotto la supervisione del Prof. Daniele De Sensi. Il simulatore, sviluppato in C++, modella e analizza il comportamento di carichi di lavoro complessi e proxy applications su architetture multicore mediante l'elaborazione e il replay di tracce di esecuzione.",
-          tags: ["C++", "HPC", "Multicore", "Proxy Apps", "Performance Modeling", "Linux"],
+          description: "Progetto di ricerca sviluppato nel Lab HPC della Sapienza sotto la supervisione del Prof. Daniele De Sensi. Il simulatore GRIT, sviluppato in C++, è progettato per convertire tracce GOAL in Proxy Application MPI funzionali. Il suo obiettivo primario è analizzare il grafo delle dipendenze delle istruzioni e gestire l'esecuzione delle operazioni replicando fedelmente il comportamento temporale e comunicativo dell'applicazione HPC originale. La pipeline di esecuzione è efficiente e scalabile: legge la traccia di input, costruisce il grafo interno delle dipendenze tramite un Parser dedicato e alloca i dati necessari nella memoria locale di ciascun processo MPI; completato il setup, avvia la simulazione guidata dinamicamente dallo Scheduler.",
+          tags: ["C++", "MPI", "HPC", "GOAL Traces", "Dependency Graph", "Linux"],
           githubUrl: "https://github.com/Valerio-Cola",
-          highlights: ["Lab HPC Sapienza", "C++ Systems", "Performance Modeling"]
+          highlights: ["Lab HPC Sapienza", "MPI Proxy Apps", "GOAL Simulation"]
         }
       ]
     },
@@ -258,12 +258,12 @@ export const translations: Record<Language, TranslationData> = {
           company: "Sapienza Università di Roma",
           period: "02/2026 – 05/2026",
           location: "Roma",
-          description: "Sotto la supervisione del Prof. Daniele De Sensi, ho progettato e sviluppato un simulatore trace driven per Proxy Applications. Il software, realizzato in C++, permette di modellare e analizzare il comportamento di carichi di lavoro complessi su architetture multicore mediante l'elaborazione di tracce di esecuzione."
+          description: "Sotto la supervisione del Prof. Daniele De Sensi, ho progettato e sviluppato GRIT, un simulatore trace-driven in C++ che converte tracce GOAL in Proxy Application MPI funzionali. Il software analizza il grafo delle dipendenze delle istruzioni e gestisce l'esecuzione replicando fedelmente il comportamento temporale e comunicativo di applicazioni HPC ad alte prestazioni."
         }
       ]
     },
     education: {
-      title: "Formazione & Certificazioni",
+      title: "Formazione",
       subtitle: "Percorso accademico e qualifiche formali",
       items: [
         {
@@ -360,7 +360,7 @@ export const translations: Record<Language, TranslationData> = {
       copy: "Copy"
     },
     about: {
-      title: "Profile & Technical Vision",
+      title: "Profile",
       subtitle: "Academic Background",
       text: "Graduated in Computer Science from Sapienza University of Rome with solid preparation in algorithms, data structures, and parallel programming. I have acquired practical experience in academic and research projects using Java, C/C++, and Python, demonstrating strong problem-solving skills, object-oriented programming (OOP), and software design.",
       keyValuesTitle: "Core Competencies & Methodology",
@@ -436,13 +436,13 @@ export const translations: Record<Language, TranslationData> = {
           highlights: ["Live Application", "Cloudflare Workers", "Analytics"]
         },
         {
-          title: "HPC Trace-Driven Simulator",
-          subtitle: "Proxy Application Simulator for Multicore Architectures",
+          title: "GRIT - HPC Trace-Driven Simulator",
+          subtitle: "GOAL Trace Converter & Proxy MPI Simulator for HPC Systems",
           period: "02/2026 – 05/2026",
-          description: "Research project developed in the Sapienza HPC Lab under the supervision of Prof. Daniele De Sensi. The C++ simulator models and evaluates complex workloads and proxy applications on multicore systems via execution trace processing and replay.",
-          tags: ["C++", "HPC", "Multicore", "Proxy Apps", "Performance Modeling", "Linux"],
+          description: "Research project developed in the Sapienza HPC Lab under the supervision of Prof. Daniele De Sensi. The GRIT simulator, developed in C++, is designed to convert GOAL traces into functional C++ Proxy MPI applications. Its primary objective is to analyze the instruction dependencies graph and manage the execution of operations in a way that replicates the temporal and communicative behavior of the original HPC application. The execution pipeline is efficient and scalable: it reads the input trace, constructs an internal dependency graph utilizing the Parser, and allocates the necessary data in the local memory of each MPI process. Once setup is complete, it starts the simulation, which is dynamically driven by the Scheduler.",
+          tags: ["C++", "MPI", "HPC", "GOAL Traces", "Dependency Graph", "Linux"],
           githubUrl: "https://github.com/Valerio-Cola",
-          highlights: ["Sapienza HPC Lab", "C++ Systems", "Performance Modeling"]
+          highlights: ["Sapienza HPC Lab", "MPI Proxy Apps", "GOAL Simulation"]
         }
       ]
     },
@@ -455,12 +455,12 @@ export const translations: Record<Language, TranslationData> = {
           company: "Sapienza University of Rome",
           period: "02/2026 – 05/2026",
           location: "Rome, Italy",
-          description: "Under the supervision of Prof. Daniele De Sensi, designed and developed a trace-driven simulator for Proxy Applications. The C++ software models and analyzes the behavior of complex workloads on multicore architectures through execution trace evaluation."
+          description: "Under the supervision of Prof. Daniele De Sensi, designed and developed GRIT, a trace-driven simulator in C++ that converts GOAL traces into functional MPI Proxy applications. Analyzed instruction dependency graphs to accurately manage and replicate temporal and communication dynamics in HPC workloads."
         }
       ]
     },
     education: {
-      title: "Education & Certifications",
+      title: "Education",
       subtitle: "Academic degrees and formal qualifications",
       items: [
         {
