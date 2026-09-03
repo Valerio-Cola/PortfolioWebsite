@@ -69,6 +69,7 @@ export const projects = [
     description: "Progetto di ricerca sviluppato nel Lab HPC della Sapienza sotto la supervisione del Prof. Daniele De Sensi. Il simulatore GRIT, sviluppato in C++, è progettato per convertire tracce GOAL in Proxy Application MPI funzionali. Il suo obiettivo primario è analizzare il grafo delle dipendenze delle istruzioni e gestire l'esecuzione delle operazioni replicando fedelmente il comportamento temporale e comunicativo dell'applicazione HPC originale. La pipeline di esecuzione legge la traccia di input, costruisce il grafo interno delle dipendenze tramite un Parser dedicato e alloca i dati necessari nella memoria locale di ciascun processo MPI; una volta completato il setup, la simulazione viene avviata e guidata dinamicamente dallo Scheduler.",
     tags: ["C++", "MPI", "HPC", "GOAL Traces", "Dependency Graph", "Linux"],
     githubUrl: "https://github.com/Valerio-Cola",
+    thesisUrl: "/INFORMATICA.COLA.TESI.pdf",
     highlights: ["Lab HPC Sapienza", "MPI Proxy Apps", "GOAL Simulation"]
   }
 ];

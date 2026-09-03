@@ -17,6 +17,7 @@ import {
   Linkedin, 
   Terminal, 
   Download, 
+  FileText,
   Sun, 
   Moon, 
   ShieldCheck, 
@@ -206,6 +207,7 @@ export default function App() {
           <nav className="hidden md:flex items-center gap-1 text-sm font-medium text-slate-700 dark:text-slate-300">
             <a href="#about" className="px-3 py-1.5 rounded-lg hover:text-blue-600 dark:hover:text-sky-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 transition-all">{t.nav.about}</a>
             <a href="#education" className="px-3 py-1.5 rounded-lg hover:text-blue-600 dark:hover:text-sky-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 transition-all">{t.nav.education}</a>
+            <a href="#thesis" className="px-3 py-1.5 rounded-lg hover:text-blue-600 dark:hover:text-sky-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 transition-all font-semibold text-blue-600 dark:text-sky-400">{t.nav.thesis}</a>
             <a href="#experience" className="px-3 py-1.5 rounded-lg hover:text-blue-600 dark:hover:text-sky-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 transition-all">{t.nav.experience}</a>
             <a href="#skills" className="px-3 py-1.5 rounded-lg hover:text-blue-600 dark:hover:text-sky-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 transition-all">{t.nav.skills}</a>
             <a href="#projects" className="px-3 py-1.5 rounded-lg hover:text-blue-600 dark:hover:text-sky-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 transition-all">{t.nav.projects}</a>
@@ -301,11 +303,11 @@ export default function App() {
               <p className="text-slate-700 dark:text-slate-300 text-base md:text-lg leading-relaxed max-w-xl">
                 {lang === 'it' ? (
                   <>
-                    Laureato in <strong className="text-slate-900 dark:text-white">Informatica</strong> con focus su <span className="text-blue-600 dark:text-sky-400 font-semibold">programmazione di sistema, C/C++ e High Performance Computing</span>. Esperienza pratica su architetture parallele (MPI, OpenMP, CUDA, HIP), algoritmi e sviluppo distribuito.
+                    Laureato in <strong className="text-slate-900 dark:text-white">Informatica</strong> con focus su <span className="text-blue-600 dark:text-sky-400 font-semibold">Sviluppo software a basso livello, C/C++ e High Performance Computing</span>. Esperienza pratica su architetture parallele (MPI, OpenMP, CUDA, HIP), algoritmi e sviluppo distribuito.
                   </>
                 ) : (
                   <>
-                    Graduated in <strong className="text-slate-900 dark:text-white">Computer Science</strong> with a focus on <span className="text-blue-600 dark:text-sky-400 font-semibold">systems programming, C/C++, and High Performance Computing</span>. Hands-on experience with parallel architectures (MPI, OpenMP, CUDA, HIP), algorithms, and distributed computing.
+                    Graduated in <strong className="text-slate-900 dark:text-white">Computer Science</strong> with a focus on <span className="text-blue-600 dark:text-sky-400 font-semibold">low-level software development, C/C++, and High Performance Computing</span>. Hands-on experience with parallel architectures (MPI, OpenMP, CUDA, HIP), algorithms, and distributed computing.
                   </>
                 )}
               </p>
@@ -697,10 +699,13 @@ export default function App() {
             </div>
             
             <div className="grid grid-cols-1 gap-6">
-              {t.projects.items.map((project, idx) => (
+              {t.projects.items.map((project, idx) => {
+                const isThesisProject = idx === 2 || project.title.includes('GRIT') || project.subtitle.toLowerCase().includes('simulator');
+                return (
                 <div 
                   key={idx} 
-                  className="bg-white dark:bg-slate-900/70 rounded-2xl border border-slate-200 dark:border-slate-800/80 shadow-xs overflow-hidden hover:shadow-md hover:border-slate-300 dark:hover:border-slate-700 transition-all p-7 md:p-8 space-y-5"
+                  id={isThesisProject ? "thesis" : undefined}
+                  className={`bg-white dark:bg-slate-900/70 rounded-2xl border border-slate-200 dark:border-slate-800/80 shadow-xs overflow-hidden hover:shadow-md hover:border-slate-300 dark:hover:border-slate-700 transition-all p-7 md:p-8 space-y-5 ${isThesisProject ? 'scroll-mt-28' : ''}`}
                 >
                   <div className="flex flex-col md:flex-row md:items-start justify-between gap-4">
                     <div>
@@ -737,7 +742,7 @@ export default function App() {
                       ))}
                     </div>
 
-                    <div className="flex items-center gap-3 shrink-0">
+                    <div className="flex items-center gap-3 shrink-0 flex-wrap">
                       {project.githubUrl && (
                         <a 
                           href={project.githubUrl} 
@@ -765,7 +770,8 @@ export default function App() {
                     </div>
                   </div>
                 </div>
-              ))}
+                );
+              })}
             </div>
           </FadeIn>
         </section>

@@ -7,6 +7,7 @@ export interface TranslationData {
     projects: string;
     experience: string;
     education: string;
+    thesis: string;
     contact: string;
   };
   hero: {
@@ -16,6 +17,7 @@ export interface TranslationData {
     bioFocus: string;
     bioRest: string;
     downloadCv: string;
+    viewThesis: string;
     contactMe: string;
     viewProjects: string;
     statsYears: string;
@@ -62,6 +64,7 @@ export interface TranslationData {
     subtitle: string;
     viewCode: string;
     viewDemo: string;
+    viewThesis: string;
     githubActive: string;
     items: {
       title: string;
@@ -71,6 +74,7 @@ export interface TranslationData {
       tags: string[];
       githubUrl: string;
       demoUrl?: string;
+      thesisUrl?: string;
       highlights: string[];
     }[];
   };
@@ -132,15 +136,17 @@ export const translations: Record<Language, TranslationData> = {
       projects: "Progetti",
       experience: "Esperienza",
       education: "Formazione",
+      thesis: "Tesi di Laurea",
       contact: "Contattami"
     },
     hero: {
       institution: "Sapienza Università di Roma",
       role: "Junior Software Developer",
       bioStrong: "Informatica",
-      bioFocus: "programmazione di sistema, C/C++ e High Performance Computing",
+      bioFocus: "Sviluppo software a basso livello, C/C++ e High Performance Computing",
       bioRest: "Esperienza pratica su architetture parallele (MPI, OpenMP, CUDA, HIP), algoritmi e sviluppo distribuito.",
       downloadCv: "Scarica CV (PDF)",
+      viewThesis: "Tesi (PDF)",
       contactMe: "Contattami",
       viewProjects: "Vedi Progetti",
       statsYears: "Anni di Studio Accademico",
@@ -217,6 +223,7 @@ export const translations: Record<Language, TranslationData> = {
       subtitle: "Sistemi distribuiti, HPC, e Web App",
       viewCode: "Codice",
       viewDemo: "Demo Live",
+      viewThesis: "Tesi (PDF)",
       githubActive: "Visualizza su GitHub",
       items: [
         {
@@ -245,6 +252,7 @@ export const translations: Record<Language, TranslationData> = {
           description: "Progetto di ricerca sviluppato nel Lab HPC della Sapienza sotto la supervisione del Prof. Daniele De Sensi. Il simulatore GRIT, sviluppato in C++, è progettato per convertire tracce GOAL in Proxy Application MPI funzionali. Il suo obiettivo primario è analizzare il grafo delle dipendenze delle istruzioni e gestire l'esecuzione delle operazioni replicando fedelmente il comportamento temporale e comunicativo dell'applicazione HPC originale. La pipeline di esecuzione è efficiente e scalabile: legge la traccia di input, costruisce il grafo interno delle dipendenze tramite un Parser dedicato e alloca i dati necessari nella memoria locale di ciascun processo MPI; completato il setup, avvia la simulazione guidata dinamicamente dallo Scheduler.",
           tags: ["C++", "MPI", "HPC", "GOAL Traces", "Dependency Graph", "Linux"],
           githubUrl: "https://github.com/Valerio-Cola",
+          thesisUrl: "/INFORMATICA.COLA.TESI.pdf",
           highlights: ["Lab HPC Sapienza", "MPI Proxy Apps", "GOAL Simulation"]
         }
       ]
@@ -329,15 +337,17 @@ export const translations: Record<Language, TranslationData> = {
       projects: "Projects",
       experience: "Experience",
       education: "Education",
+      thesis: "Thesis",
       contact: "Contact"
     },
     hero: {
       institution: "Sapienza University of Rome",
       role: "Junior Software Developer",
       bioStrong: "Computer Science",
-      bioFocus: "systems programming, C/C++, and High Performance Computing",
+      bioFocus: "low-level software development, C/C++, and High Performance Computing",
       bioRest: "Hands-on experience with parallel architectures (MPI, OpenMP, CUDA, HIP), algorithms, and distributed computing.",
       downloadCv: "Download CV (PDF)",
+      viewThesis: "Thesis (PDF)",
       contactMe: "Contact Me",
       viewProjects: "View Projects",
       statsYears: "Years Academic Study",
@@ -414,6 +424,7 @@ export const translations: Record<Language, TranslationData> = {
       subtitle: "Distributed systems, HPC, and Web Apps",
       viewCode: "Source Code",
       viewDemo: "Live Demo",
+      viewThesis: "Thesis (PDF)",
       githubActive: "View on GitHub",
       items: [
         {
@@ -442,6 +453,7 @@ export const translations: Record<Language, TranslationData> = {
           description: "Research project developed in the Sapienza HPC Lab under the supervision of Prof. Daniele De Sensi. The GRIT simulator, developed in C++, is designed to convert GOAL traces into functional C++ Proxy MPI applications. Its primary objective is to analyze the instruction dependencies graph and manage the execution of operations in a way that replicates the temporal and communicative behavior of the original HPC application. The execution pipeline is efficient and scalable: it reads the input trace, constructs an internal dependency graph utilizing the Parser, and allocates the necessary data in the local memory of each MPI process. Once setup is complete, it starts the simulation, which is dynamically driven by the Scheduler.",
           tags: ["C++", "MPI", "HPC", "GOAL Traces", "Dependency Graph", "Linux"],
           githubUrl: "https://github.com/Valerio-Cola",
+          thesisUrl: "/INFORMATICA.COLA.TESI.pdf",
           highlights: ["Sapienza HPC Lab", "MPI Proxy Apps", "GOAL Simulation"]
         }
       ]
