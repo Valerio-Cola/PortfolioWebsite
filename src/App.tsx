@@ -27,6 +27,7 @@ import {
   Check,
   Cpu,
   Layers,
+  Database,
   Activity,
   Globe,
   Zap,
@@ -318,12 +319,22 @@ export default function App() {
                   href="/CV_Valerio_Cola.pdf" 
                   target="_blank" 
                   rel="noopener noreferrer" 
-                  download="CV_Valerio_Cola.pdf" 
-                  aria-label="Scarica il Curriculum Vitae di Valerio Cola" 
+                  aria-label="Visualizza il Curriculum Vitae di Valerio Cola" 
                   className="flex items-center gap-2 px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white shadow-sm hover:shadow font-medium text-sm rounded-xl transition-all"
                 >
                   <Download className="w-4 h-4" aria-hidden="true" />
                   {t.hero.downloadCv}
+                </a>
+
+                <a 
+                  href="/INFORMATICA.COLA.TESI.pdf" 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  aria-label="Visualizza la Tesi di Laurea di Valerio Cola" 
+                  className="flex items-center gap-2 px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white shadow-sm hover:shadow font-medium text-sm rounded-xl transition-all cursor-pointer"
+                >
+                  <FileText className="w-4 h-4" aria-hidden="true" />
+                  {t.hero.viewThesis}
                 </a>
                 
                 <button 
@@ -434,7 +445,7 @@ export default function App() {
                     </div>
                     <div className="grid grid-cols-3 gap-1">
                       <span className="text-slate-400 font-semibold">{t.terminal.toolsLabel}</span>
-                      <span className="col-span-2 text-amber-300">VSCode, WSL, Git, Valgrind, Make</span>
+                      <span className="col-span-2 text-amber-300">VSCode, WSL, Git, Docker, Make</span>
                     </div>
                   </div>
 
@@ -495,11 +506,7 @@ export default function App() {
                     </p>
                     
                     <p>
-                      Ho maturato esperienza pratica nello sviluppo di progetti accademici e di ricerca utilizzando <span className="font-semibold text-slate-900 dark:text-white">Java, C/C++ e Python</span>, dimostrando una forte attitudine al problem solving, alla programmazione ad oggetti (OOP), ai design pattern e alla progettazione software strutturata.
-                    </p>
-
-                    <p>
-                      Particolarmente orientato alla programmazione di sistema e all'High Performance Computing con <span className="font-semibold text-slate-900 dark:text-white">OpenMP, MPI, CUDA e HIP</span>, con costante attenzione all'ottimizzazione delle prestazioni, gestione efficiente della memoria, database relazionali e utilizzo dei tool avanzati di profiling e debugging in ambiente <span className="font-semibold text-slate-900 dark:text-white">Linux</span>.
+                      Sviluppatore software con solida esperienza accademica e di ricerca in <span className="font-semibold text-slate-900 dark:text-white">C/C++, Python e Java</span>, focalizzato sulla programmazione a basso livello e sull'High Performance Computing. Ho competenze consolidate nell'ottimizzazione del codice e nella gestione della memoria, con esperienza pratica in ambienti paralleli ed eterogenei tramite <span className="font-semibold text-slate-900 dark:text-white">MPI, OpenMP, CUDA e HIP</span>. Completo il mio profilo con solide basi di <span className="font-semibold text-slate-900 dark:text-white">OOP</span> e buone conoscenze sullo sviluppo di <span className="font-semibold text-slate-900 dark:text-white">API REST</span>, interfacciamento con database <span className="font-semibold text-slate-900 dark:text-white">SQL</span>, containerizzazione con <span className="font-semibold text-slate-900 dark:text-white">Docker</span> e automazione in ambiente <span className="font-semibold text-slate-900 dark:text-white">Linux/Bash</span>.
                     </p>
                   </>
                 ) : (
@@ -509,15 +516,38 @@ export default function App() {
                     </p>
                     
                     <p>
-                      I have gained hands-on experience developing academic and research projects in <span className="font-semibold text-slate-900 dark:text-white">Java, C/C++, and Python</span>, demonstrating a strong aptitude for analytical problem solving, object-oriented programming (OOP), design patterns, and structured software architecture.
-                    </p>
-
-                    <p>
-                      Specially focused on low-level systems and High Performance Computing using <span className="font-semibold text-slate-900 dark:text-white">OpenMP, MPI, CUDA, and HIP</span>, with constant emphasis on execution efficiency, rigorous memory management, relational databases, and advanced debugging/profiling toolchains in <span className="font-semibold text-slate-900 dark:text-white">Linux</span> environments.
+                      Software developer with solid academic and research experience in <span className="font-semibold text-slate-900 dark:text-white">C/C++, Python, and Java</span>, focused on low-level systems programming and High Performance Computing. I have consolidated skills in code optimization and memory management, with hands-on experience in parallel and heterogeneous environments via <span className="font-semibold text-slate-900 dark:text-white">MPI, OpenMP, CUDA, and HIP</span>. I round out my profile with solid OOP foundations, good working knowledge of <span className="font-semibold text-slate-900 dark:text-white">REST APIs</span> development, <span className="font-semibold text-slate-900 dark:text-white">SQL</span> database interfacing, containerization with <span className="font-semibold text-slate-900 dark:text-white">Docker</span>, and automation in <span className="font-semibold text-slate-900 dark:text-white">Linux/Bash</span>.
                     </p>
                   </>
                 )}
               </div>
+
+              {/* Key Competencies Badges & Highlights */}
+              {t.about.competencies && t.about.competencies.length > 0 && (
+                <div className="pt-6 mt-6 border-t border-slate-200 dark:border-slate-800/80">
+                  <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-4 font-mono">
+                    {t.about.competenciesTitle}
+                  </h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5">
+                    {t.about.competencies.map((item, idx) => (
+                      <div 
+                        key={idx} 
+                        className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800/80 hover:border-slate-300 dark:hover:border-slate-700 transition-colors"
+                      >
+                        <div className="flex items-center justify-between gap-2 mb-1.5">
+                          <span className="font-semibold text-slate-900 dark:text-slate-100 text-sm">{item.skill}</span>
+                          <span className="px-2 py-0.5 rounded-md text-[11px] font-mono font-medium bg-blue-500/10 text-blue-700 dark:text-sky-400 border border-blue-500/20">
+                            {item.level}
+                          </span>
+                        </div>
+                        <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+                          {item.description}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           </FadeIn>
         </section>
@@ -648,6 +678,7 @@ export default function App() {
                 let GroupIcon = Code2;
                 if (skillGroup.icon === 'cpu') GroupIcon = Cpu;
                 if (skillGroup.icon === 'layers') GroupIcon = Layers;
+                if (skillGroup.icon === 'database') GroupIcon = Database;
                 if (skillGroup.icon === 'terminal') GroupIcon = Terminal;
                 if (skillGroup.icon === 'globe') GroupIcon = Globe;
 
@@ -753,6 +784,18 @@ export default function App() {
                         >
                           <Github className="w-3.5 h-3.5" />
                           {t.projects.viewCode}
+                        </a>
+                      )}
+                      {(project as any).thesisUrl && (
+                        <a 
+                          href={(project as any).thesisUrl} 
+                          target="_blank" 
+                          rel="noopener noreferrer" 
+                          className="flex items-center gap-1.5 px-4 py-2 bg-indigo-50 dark:bg-indigo-950/40 hover:bg-indigo-100 dark:hover:bg-indigo-900/60 text-indigo-700 dark:text-indigo-300 text-xs font-semibold rounded-lg border border-indigo-200 dark:border-indigo-800/60 transition-colors"
+                          aria-label={`Visualizza la Tesi di Laurea relativa a ${project.title}`}
+                        >
+                          <FileText className="w-3.5 h-3.5" />
+                          {t.projects.viewThesis}
                         </a>
                       )}
                       {project.demoUrl && (

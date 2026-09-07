@@ -45,6 +45,12 @@ export interface TranslationData {
     text: string;
     keyValuesTitle: string;
     strengthsTitle: string;
+    competenciesTitle: string;
+    competencies: {
+      skill: string;
+      level: string;
+      description: string;
+    }[];
     keyPoints: {
       title: string;
       desc: string;
@@ -145,7 +151,7 @@ export const translations: Record<Language, TranslationData> = {
       bioStrong: "Informatica",
       bioFocus: "Sviluppo software a basso livello, C/C++ e High Performance Computing",
       bioRest: "Esperienza pratica su architetture parallele (MPI, OpenMP, CUDA, HIP), algoritmi e sviluppo distribuito.",
-      downloadCv: "Scarica CV (PDF)",
+      downloadCv: "CV (PDF)",
       viewThesis: "Tesi (PDF)",
       contactMe: "Contattami",
       viewProjects: "Vedi Progetti",
@@ -170,10 +176,43 @@ export const translations: Record<Language, TranslationData> = {
     },
     about: {
       title: "Profilo",
-      subtitle: "Background accademico",
+      subtitle: "Background accademico & competenze chiave",
       text: "Laureato in Informatica presso Sapienza Università di Roma con una solida preparazione in algoritmi, strutture dati e programmazione parallela. Ho maturato esperienza pratica nello sviluppo di progetti accademici utilizzando Java, C/C++ e Python, dimostrando una forte attitudine al problem solving, alla programmazione ad oggetti (OOP) e alla progettazione software.",
       keyValuesTitle: "Aree di Competenza & Approccio",
       strengthsTitle: "Punti di Forza",
+      competenciesTitle: "Competenze Chiave & Strumenti",
+      competencies: [
+        {
+          skill: "C / C++ & HPC",
+          level: "Specializzazione",
+          description: "Calcolo parallelo (MPI, OpenMP), accelerazione GPU (CUDA, HIP) e gestione manuale della memoria."
+        },
+        {
+          skill: "Java & Python",
+          level: "Buona conoscenza",
+          description: "Programmazione ad oggetti (OOP), algoritmi, strutture dati e progettazione software modulare."
+        },
+        {
+          skill: "Database & SQL",
+          level: "Buona conoscenza",
+          description: "Progettazione di schemi, modellazione dati relazionali, vincoli di integrità e query SQL."
+        },
+        {
+          skill: "API REST (Python)",
+          level: "Buona conoscenza",
+          description: "Progettazione e consumo di servizi web RESTful con Python, payload JSON e architettura client-server."
+        },
+        {
+          skill: "Docker & Git",
+          level: "Strumenti",
+          description: "Containerizzazione con Dockerfile e ambienti isolati; versionamento distribuito e branching con Git."
+        },
+        {
+          skill: "Networking & Bash",
+          level: "Fondamenti & Scripting",
+          description: "Concetti base di rete (stack TCP/IP, UDP, MAC/IP) e scripting in shell Bash per ambienti Linux/Unix."
+        }
+      ],
       keyPoints: [
         {
           title: "Sviluppo di Sistema & Ottimizzazione",
@@ -193,28 +232,28 @@ export const translations: Record<Language, TranslationData> = {
       title: "Competenze Tecniche",
       groups: [
         {
-          category: "Programmazione di Sistema & HPC",
+          category: "Programmazione & HPC",
           icon: "cpu",
-          description: "Sviluppo a basso livello, concorrenza e calcolo ad alte prestazioni",
-          items: ["C", "C++", "OpenMP", "MPI", "CUDA (NVIDIA)", "HIP (AMD)", "Gestione Memoria", "POSIX / Linux API"]
+          description: "Sviluppo a basso livello, calcolo parallelo, architetture distribuite e acceleratori hardware",
+          items: ["C", "C++", "MPI", "OpenMP", "CUDA (NVIDIA)", "HIP (AMD)", "Gestione Memoria", "POSIX / Linux API"]
         },
         {
-          category: "Sviluppo Software & Paradigmi",
-          icon: "layers",
-          description: "Ingegneria del software, programmazione orientata agli oggetti e algoritmi",
-          items: ["Java", "Python", "OOP", "Design Pattern", "DB Relazionali (SQL)", "Complessità Algoritmica"]
+          category: "Database, API & Linguaggi",
+          icon: "database",
+          description: "Basi di dati relazionali, servizi web REST, linguaggi ad alto livello e paradigmi OOP",
+          items: ["Java", "Python", "DB Relazionali (SQL)", "API REST (Python)", "OOP", "Design Pattern", "Complessità Algoritmica"]
         },
         {
-          category: "Ambiente di Sviluppo & Profiling",
+          category: "DevOps, Toolchain & Reti",
           icon: "terminal",
-          description: "Toolchain di compilazione, analisi prestazionale e debugging",
-          items: ["Linux", "Git", "Bash", "Valgrind", "GDB", "Make / CMake", "Profiling Tools"]
+          description: "Containerizzazione, versionamento distribuito, scripting e protocolli di rete",
+          items: ["Docker (Competenze base)", "Git (Versionamento)", "Bash & Scripting", "Networking (TCP/IP, UDP, MAC)", "Linux / Unix", "Make / CMake", "GDB"]
         },
         {
           category: "Lingue & Comunicazione",
           icon: "globe",
-          description: "Competenze linguistiche per contesti internazionali",
-          items: ["Italiano (Madrelingua)", "Inglese (Competente)", "Spagnolo (Conversazionale)"]
+          description: "Competenze linguistiche e documentazione tecnica per contesti professionali",
+          items: ["Italiano (Madrelingua)", "Inglese (Competente)", "Spagnolo (Conversazionale)", "Documentazione Tecnica", "Lavoro in Team"]
         }
       ]
     },
@@ -346,7 +385,7 @@ export const translations: Record<Language, TranslationData> = {
       bioStrong: "Computer Science",
       bioFocus: "low-level software development, C/C++, and High Performance Computing",
       bioRest: "Hands-on experience with parallel architectures (MPI, OpenMP, CUDA, HIP), algorithms, and distributed computing.",
-      downloadCv: "Download CV (PDF)",
+      downloadCv: "CV (PDF)",
       viewThesis: "Thesis (PDF)",
       contactMe: "Contact Me",
       viewProjects: "View Projects",
@@ -371,10 +410,43 @@ export const translations: Record<Language, TranslationData> = {
     },
     about: {
       title: "Profile",
-      subtitle: "Academic Background",
+      subtitle: "Academic background & core competencies",
       text: "Graduated in Computer Science from Sapienza University of Rome with solid preparation in algorithms, data structures, and parallel programming. I have acquired practical experience in academic and research projects using Java, C/C++, and Python, demonstrating strong problem-solving skills, object-oriented programming (OOP), and software design.",
       keyValuesTitle: "Core Competencies & Methodology",
       strengthsTitle: "Key Strengths",
+      competenciesTitle: "Core Competencies & Tools",
+      competencies: [
+        {
+          skill: "C / C++ & HPC",
+          level: "Specialization",
+          description: "Parallel computing (MPI, OpenMP), GPU acceleration (CUDA, HIP), and manual memory management."
+        },
+        {
+          skill: "Java & Python",
+          level: "Strong proficiency",
+          description: "Object-oriented programming (OOP), algorithms, data structures, and modular software design."
+        },
+        {
+          skill: "Databases & SQL",
+          level: "Strong proficiency",
+          description: "Schema design, relational data modeling, integrity constraints, and query optimization."
+        },
+        {
+          skill: "REST APIs (Python)",
+          level: "Proficient",
+          description: "Designing and consuming RESTful web services with Python, JSON payloads, and client-server architecture."
+        },
+        {
+          skill: "Docker & Git",
+          level: "Tools & DevOps",
+          description: "Containerization with Dockerfiles and isolated environments; distributed version control and branching with Git."
+        },
+        {
+          skill: "Networking & Bash",
+          level: "Fundamentals & Scripting",
+          description: "Network fundamentals (TCP/IP stack, UDP, MAC/IP addressing) and Bash shell scripting for Linux/Unix."
+        }
+      ],
       keyPoints: [
         {
           title: "Systems Development & Optimization",
@@ -394,28 +466,28 @@ export const translations: Record<Language, TranslationData> = {
       title: "Technical Skills",
       groups: [
         {
-          category: "Systems Programming & HPC",
+          category: "Programming & HPC",
           icon: "cpu",
-          description: "Low-level development, concurrency, and high-performance computing",
-          items: ["C", "C++", "OpenMP", "MPI", "CUDA (NVIDIA)", "HIP (AMD)", "Memory Management", "POSIX / Linux API"]
+          description: "Low-level development, parallel computing, distributed architectures, and hardware accelerators",
+          items: ["C", "C++", "MPI", "OpenMP", "CUDA (NVIDIA)", "HIP (AMD)", "Memory Management", "POSIX / Linux API"]
         },
         {
-          category: "Software Engineering & Paradigms",
-          icon: "layers",
-          description: "Software engineering, object-oriented programming, and algorithms",
-          items: ["Java", "Python", "OOP", "Design Patterns", "Relational DBs (SQL)", "Algorithmic Complexity"]
+          category: "Databases, APIs & Languages",
+          icon: "database",
+          description: "Relational databases, REST web services, high-level languages, and OOP paradigms",
+          items: ["Java", "Python", "Relational DBs (SQL)", "REST APIs (Python)", "OOP", "Design Patterns", "Algorithmic Complexity"]
         },
         {
-          category: "Development Environment & Profiling",
+          category: "DevOps, Toolchain & Networking",
           icon: "terminal",
-          description: "Compilation toolchains, performance analysis, and debugging",
-          items: ["Linux", "Git", "Bash", "Valgrind", "GDB", "Make / CMake", "Profiling Tools"]
+          description: "Containerization, distributed version control, scripting, and network protocols",
+          items: ["Docker (Basic skills)", "Git (Version Control)", "Bash & Scripting", "Networking (TCP/IP, UDP, MAC)", "Linux / Unix", "Make / CMake", "GDB"]
         },
         {
           category: "Languages & Communication",
           icon: "globe",
-          description: "Language proficiency for international environments",
-          items: ["Italian (Native)", "English (Professional Working)", "Spanish (Conversational)"]
+          description: "Language proficiency and technical documentation for professional contexts",
+          items: ["Italian (Native)", "English (Proficient)", "Spanish (Conversational)", "Technical Documentation", "Team Collaboration"]
         }
       ]
     },

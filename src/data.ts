@@ -76,28 +76,28 @@ export const projects = [
 
 export const skills = [
   {
-    category: "Programmazione di Sistema & HPC",
+    category: "Programmazione & HPC",
     icon: "cpu",
-    description: "Sviluppo a basso livello, concorrenza e calcolo ad alte prestazioni",
-    items: ["C", "C++", "OpenMP", "MPI", "CUDA (NVIDIA)", "HIP (AMD)", "Gestione Memoria", "POSIX / Linux API"]
+    description: "Sviluppo a basso livello, calcolo parallelo, architetture distribuite e acceleratori hardware",
+    items: ["C", "C++", "MPI", "OpenMP", "CUDA (NVIDIA)", "HIP (AMD)", "Gestione Memoria", "POSIX / Linux API"]
   },
   {
-    category: "Sviluppo Software & Paradigmi",
-    icon: "layers",
-    description: "Ingegneria del software, programmazione orientata agli oggetti e algoritmi",
-    items: ["Java", "Python", "OOP", "Design Pattern", "DB Relazionali (SQL)", "Complessità Algoritmica"]
+    category: "Database, API & Linguaggi",
+    icon: "database",
+    description: "Basi di dati relazionali, servizi web REST, linguaggi ad alto livello e paradigmi OOP",
+    items: ["Java", "Python", "DB Relazionali (SQL)", "API REST (Python)", "OOP", "Design Pattern", "Complessità Algoritmica"]
   },
   {
-    category: "Ambiente di Sviluppo & Profiling",
+    category: "DevOps, Toolchain & Reti",
     icon: "terminal",
-    description: "Toolchain di compilazione, analisi prestazionale e debugging",
-    items: ["Linux", "Git", "Bash", "Valgrind", "GDB", "Make / CMake", "Profiling Tools"]
+    description: "Containerizzazione, versionamento distribuito, scripting e protocolli di rete",
+    items: ["Docker (Competenze base)", "Git (Versionamento)", "Bash & Scripting", "Networking (TCP/IP, UDP, MAC)", "Linux / Unix", "Make / CMake", "GDB"]
   },
   {
     category: "Lingue & Comunicazione",
     icon: "globe",
-    description: "Competenze linguistiche per contesti internazionali",
-    items: ["Italiano (Madrelingua)", "Inglese (Competente)", "Spagnolo (Conversazionale)"]
+    description: "Competenze linguistiche e documentazione tecnica per contesti professionali",
+    items: ["Italiano (Madrelingua)", "Inglese (Competente)", "Spagnolo (Conversazionale)", "Documentazione Tecnica", "Lavoro in Team"]
   }
 ];
 
