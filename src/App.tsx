@@ -529,33 +529,6 @@ export default function App() {
                   </>
                 )}
               </div>
-
-              {/* Key Competencies Badges & Highlights */}
-              {t.about.competencies && t.about.competencies.length > 0 && (
-                <div className="pt-6 mt-6 border-t border-slate-200 dark:border-slate-800/80">
-                  <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-4 font-mono">
-                    {t.about.competenciesTitle}
-                  </h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5">
-                    {t.about.competencies.map((item, idx) => (
-                      <div 
-                        key={idx} 
-                        className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800/80 hover:border-slate-300 dark:hover:border-slate-700 transition-colors"
-                      >
-                        <div className="flex items-center justify-between gap-2 mb-1.5">
-                          <span className="font-semibold text-slate-900 dark:text-slate-100 text-sm">{item.skill}</span>
-                          <span className="px-2 py-0.5 rounded-md text-[11px] font-mono font-medium bg-blue-500/10 text-blue-700 dark:text-sky-400 border border-blue-500/20">
-                            {item.level}
-                          </span>
-                        </div>
-                        <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
-                          {item.description}
-                        </p>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
             </div>
           </FadeIn>
         </section>
