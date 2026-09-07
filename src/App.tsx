@@ -506,7 +506,11 @@ export default function App() {
                     </p>
                     
                     <p>
-                      Sviluppatore software con solida esperienza accademica e di ricerca in <span className="font-semibold text-slate-900 dark:text-white">C/C++, Python e Java</span>, focalizzato sulla programmazione a basso livello e sull'High Performance Computing. Ho competenze consolidate nell'ottimizzazione del codice e nella gestione della memoria, con esperienza pratica in ambienti paralleli ed eterogenei tramite <span className="font-semibold text-slate-900 dark:text-white">MPI, OpenMP, CUDA e HIP</span>. Completo il mio profilo con solide basi di <span className="font-semibold text-slate-900 dark:text-white">OOP</span> e buone conoscenze sullo sviluppo di <span className="font-semibold text-slate-900 dark:text-white">API REST</span>, interfacciamento con database <span className="font-semibold text-slate-900 dark:text-white">SQL</span>, containerizzazione con <span className="font-semibold text-slate-900 dark:text-white">Docker</span> e automazione in ambiente <span className="font-semibold text-slate-900 dark:text-white">Linux/Bash</span>.
+                      Background formativo e laboratoriale in <span className="font-semibold text-slate-900 dark:text-white">C/C++, Python e Java</span>, focalizzato sulla programmazione a basso livello e sull'High Performance Computing. Ho competenze consolidate nell'ottimizzazione del codice e nella gestione della memoria, con esperienza pratica in ambienti paralleli ed eterogenei tramite <span className="font-semibold text-slate-900 dark:text-white">MPI, OpenMP, CUDA e HIP</span>.
+                    </p>
+
+                    <p>
+                      Solide basi di <span className="font-semibold text-slate-900 dark:text-white">OOP</span> e buone conoscenze sullo sviluppo di <span className="font-semibold text-slate-900 dark:text-white">API REST</span>, interfacciamento con database <span className="font-semibold text-slate-900 dark:text-white">SQL</span>, containerizzazione con <span className="font-semibold text-slate-900 dark:text-white">Docker</span> e automazione in ambiente <span className="font-semibold text-slate-900 dark:text-white">Linux/Bash</span>.
                     </p>
                   </>
                 ) : (
@@ -516,7 +520,11 @@ export default function App() {
                     </p>
                     
                     <p>
-                      Software developer with solid academic and research experience in <span className="font-semibold text-slate-900 dark:text-white">C/C++, Python, and Java</span>, focused on low-level systems programming and High Performance Computing. I have consolidated skills in code optimization and memory management, with hands-on experience in parallel and heterogeneous environments via <span className="font-semibold text-slate-900 dark:text-white">MPI, OpenMP, CUDA, and HIP</span>. I round out my profile with solid OOP foundations, good working knowledge of <span className="font-semibold text-slate-900 dark:text-white">REST APIs</span> development, <span className="font-semibold text-slate-900 dark:text-white">SQL</span> database interfacing, containerization with <span className="font-semibold text-slate-900 dark:text-white">Docker</span>, and automation in <span className="font-semibold text-slate-900 dark:text-white">Linux/Bash</span>.
+                      Academic and laboratory background in <span className="font-semibold text-slate-900 dark:text-white">C/C++, Python, and Java</span>, focused on low-level systems programming and High Performance Computing. I have consolidated skills in code optimization and memory management, with hands-on experience in parallel and heterogeneous environments via <span className="font-semibold text-slate-900 dark:text-white">MPI, OpenMP, CUDA, and HIP</span>.
+                    </p>
+
+                    <p>
+                      Solid OOP foundations and good working knowledge of <span className="font-semibold text-slate-900 dark:text-white">REST APIs</span> development, <span className="font-semibold text-slate-900 dark:text-white">SQL</span> database interfacing, containerization with <span className="font-semibold text-slate-900 dark:text-white">Docker</span>, and automation in <span className="font-semibold text-slate-900 dark:text-white">Linux/Bash</span>.
                     </p>
                   </>
                 )}
